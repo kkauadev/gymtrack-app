@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Flutter Custom Debug (Emulator 5554)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main.dart",
+        "args": [
+          "--devtools",
+          "--no-enable-impeller"
+        ],
+        "toolArgs": [
+          "-d",
+          "emulator-5554"
+        ]
+      }
+    ]
+  }
+  
