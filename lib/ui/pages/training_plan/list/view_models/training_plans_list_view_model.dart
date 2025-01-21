@@ -16,9 +16,9 @@ class TrainingPlansListViewModel extends ChangeNotifier {
       initialValue: [],
     );
     deleteOne = Command.createAsync(_deleteOne, initialValue: null);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      load.execute(userId);
-    });
+    deleteOne.addListener(() => load.execute(userId));
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => load.execute(userId));
   }
 
   late Command<String, List<TrainingPlan>> load;

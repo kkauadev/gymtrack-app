@@ -19,6 +19,8 @@ class ExerciseListViewModel extends ChangeNotifier {
     );
     deleteOneExercise = Command.createAsync(_deleteOne, initialValue: null);
 
+    saveExercise.addListener(() => load.execute(trainingId));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       load.execute(trainingId);
     });

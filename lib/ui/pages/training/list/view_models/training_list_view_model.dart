@@ -1,58 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:gymtrack/data/repositories/training/training_repository.dart';
-import 'package:gymtrack/data/repositories/trainingplan/training_plan_repository.dart';
 import 'package:gymtrack/domain/models/id.dart';
 import 'package:gymtrack/domain/models/training.dart';
-import 'package:gymtrack/domain/models/training_plan.dart';
 
 class TrainingListViewModel extends ChangeNotifier {
-  final TrainingPlanRepository _trainingPlanRepository;
   final TrainingRepository _trainingRepository;
-  final String trainingPlanId;
+  final String dayId;
 
   TrainingListViewModel({
     required TrainingRepository trainingRepository,
-    required TrainingPlanRepository trainingPlanRepository,
-    required this.trainingPlanId,
-  })  : _trainingRepository = trainingRepository,
-        _trainingPlanRepository = trainingPlanRepository {
+    required this.dayId,
+  }) : _trainingRepository = trainingRepository {
     loadTrainings = Command.createAsync(_loadTrainings, initialValue: []);
-    loadTrainingPlan = Command.createAsync(
-      _loadTrainingPlan,
-      initialValue: null,
-    );
     saveTraining = Command.createAsync(_saveTraining, initialValue: null);
     deleteTraining = Command.createAsync(_deleteOne, initialValue: null);
 
+    saveTraining.addListener(() => loadTrainings.execute(dayId));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadTrainings.execute(trainingPlanId);
-      loadTrainingPlan.execute(trainingPlanId);
+      loadTrainings.execute(dayId);
     });
   }
 
   late Command<String, List<Training>> loadTrainings;
-  late Command<String, TrainingPlan?> loadTrainingPlan;
   late Command<Training, Id?> saveTraining;
   late Command<String, void> deleteTraining;
 
-  Future<List<Training>> _loadTrainings(String trainingPlanId) async {
-    final result = await _trainingRepository.getTrainings(trainingPlanId);
+  Future<List<Training>> _loadTrainings(String dayId) async {
+    final result = await _trainingRepository.getTrainings(dayId);
 
     if (result.isSuccess()) {
       return result.getOrDefault([]);
-    } else {
-      throw Exception(result.exceptionOrNull());
-    }
-  }
-
-  Future<TrainingPlan> _loadTrainingPlan(String trainingPlanId) async {
-    final result = await _trainingPlanRepository.getTrainingPlan(
-      trainingPlanId,
-    );
-
-    if (result.isSuccess()) {
-      return result.getOrThrow();
     } else {
       throw Exception(result.exceptionOrNull());
     }

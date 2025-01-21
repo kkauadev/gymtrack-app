@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Dropdown extends StatefulWidget {
   final String? selectedValue;
-  final List<String> items;
+  final Iterable<String> items;
   final ValueChanged<String> onSelected;
   final Widget? label;
 
@@ -25,7 +25,7 @@ class _DropdownState extends State<Dropdown> {
   @override
   void initState() {
     super.initState();
-    _selectedValue = widget.selectedValue ?? widget.items[0];
+    _selectedValue = widget.selectedValue ?? widget.items.first;
   }
 
   @override

@@ -20,7 +20,6 @@ GoRoute trainingPlanRoute = GoRoute(
           context,
         ),
         userId: state.pathParameters['userId']!,
-        //userId: state.pathParameters['userId']!,
       ),
     ),
   ),
@@ -37,7 +36,6 @@ GoRoute trainingPlanRoute = GoRoute(
       path: Routes.build(method: "/create"),
       pageBuilder: (context, state) => NoTransitionPage(
         child: TrainingPlansCreateScreen(
-          userId: "1",
           viewModel: TrainingPlanCreateViewModel(
             trainingPlanRepository:
                 Provider.of<TrainingPlanRepositoryRemote>(context),

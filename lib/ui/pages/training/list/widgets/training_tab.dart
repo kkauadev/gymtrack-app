@@ -9,13 +9,13 @@ class TrainingListView extends StatefulWidget {
   const TrainingListView({
     super.key,
     required this.items,
-    required this.onPressedAdd,
+    required this.onPressAdd,
     required this.viewModel,
   });
 
   final TrainingListViewModel viewModel;
   final List<Training> items;
-  final void Function() onPressedAdd;
+  final void Function() onPressAdd;
 
   @override
   State<StatefulWidget> createState() => TrainingListViewState();
@@ -44,14 +44,14 @@ class TrainingListViewState extends State<TrainingListView> {
               onTapDelete: () {
                 widget.viewModel.deleteTraining.execute(widget.items[i].id);
                 widget.viewModel.loadTrainings.execute(
-                  widget.viewModel.trainingPlanId,
+                  widget.viewModel.dayId,
                 );
               },
             );
           } else {
             return Center(
               child: IconButton(
-                onPressed: () => widget.onPressedAdd(),
+                onPressed: () => widget.onPressAdd(),
                 icon: Icon(
                   Icons.add_rounded,
                   size: 40,

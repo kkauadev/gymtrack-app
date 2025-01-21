@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_command/flutter_command.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/domain/models/training_plan.dart';
 import 'package:gymtrack/routing/routes.dart';
@@ -8,14 +9,39 @@ import 'package:gymtrack/ui/core/widgets/text_form_field.dart';
 import 'package:gymtrack/ui/pages/training_plan/create/view_models/training_plan_create_view_model.dart';
 
 class TrainingPlansCreateScreen extends StatefulWidget {
-  const TrainingPlansCreateScreen(
-      {super.key, required this.viewModel, required this.userId});
+  const TrainingPlansCreateScreen({
+    super.key,
+    required this.viewModel,
+  });
 
   final TrainingPlanCreateViewModel viewModel;
-  final String userId;
 
   @override
   State<StatefulWidget> createState() => TrainingPlansCreateScreenState();
+}
+
+TrainingPlanLevel parseLevel(String? value) {
+  switch (value) {
+    case 'Basico':
+      return TrainingPlanLevel.basic;
+    case 'Intermediario':
+      return TrainingPlanLevel.intermediary;
+    case 'Avancado':
+      return TrainingPlanLevel.advanced;
+    default:
+      return TrainingPlanLevel.basic;
+  }
+}
+
+TrainingPlanType parseType(String? value) {
+  switch (value) {
+    case 'Cardio':
+      return TrainingPlanType.cardio;
+    case 'Exercicio':
+      return TrainingPlanType.exercise;
+    default:
+      return TrainingPlanType.exercise;
+  }
 }
 
 class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
@@ -25,14 +51,12 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
   String? pathologies;
   String? observation;
   String? nivel;
+  String? type;
   int? timeInDays;
 
-  final List<String> dropdownItems = [
-    'Option 1',
-    'Option 2',
-    'Option 3',
-    'Option 4',
-  ];
+  final List<String> dropdownTypeItems = ['Cardio', 'Exercicio'];
+
+  final List<String> dropdownLevelItems = ['Option 1', 'Option 1', 'Option 1'];
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +66,59 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
         widget.viewModel.saveTrainingPlan.execute(TrainingPlan(
           name: name?.trim() ?? "",
           pathology: pathologies?.trim() ?? "",
-          userId: widget.userId,
+          userId: widget.viewModel.userId,
           timeInDays: timeInDays ?? 0,
           observation: observation?.trim() ?? "",
+          level: parseLevel(nivel),
+          type: parseType(type),
         ));
-        context.push(
-          Routes.build(
-              path: "/training-plan", param: "/${widget.viewModel.userId}"),
-        );
       }
+    }
+
+    var textStyle = Theme.of(context)
+        .textTheme
+        .headlineSmall
+        ?.copyWith(fontWeight: FontWeight.bold);
+
+    showSuccessDialog() {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  "O seu plano de treino foi criado com sucesso.",
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Button(
+                  label: "Continuar",
+                  onPressed: () {
+                    context.push(
+                      Routes.build(
+                        path: "/training-plan",
+                        param: "/${widget.viewModel.userId}",
+                      ),
+                    );
+                    context.pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     return Scaffold(
@@ -81,6 +149,14 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                       child: Text("Patologias"),
                     ),
                   ),
+                  Dropdown(
+                    label: Padding(
+                      padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
+                      child: Text("Tipo"),
+                    ),
+                    items: dropdownTypeItems,
+                    onSelected: (value) => setState(() => type = value),
+                  ),
                   InputFormField(
                     onSaved: (value) => observation = value,
                     validator: TrainingPlansCreateValidator.observation,
@@ -94,7 +170,7 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                       padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
                       child: Text("Nivel"),
                     ),
-                    items: dropdownItems,
+                    items: dropdownLevelItems,
                     onSelected: (value) => setState(() => nivel = value),
                   ),
                   InputFormField(
@@ -106,7 +182,14 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                     ),
                   ),
                   SizedBox(height: 12),
-                  Button(label: "Criar", onPressed: onSubmit)
+                  Button(label: "Criar", onPressed: onSubmit),
+                  CommandBuilder(
+                    command: widget.viewModel.saveTrainingPlan,
+                    onData: (ctx, retur, obj) {
+                      Future.microtask(showSuccessDialog);
+                      return SizedBox.shrink();
+                    },
+                  )
                 ],
               ),
             ),

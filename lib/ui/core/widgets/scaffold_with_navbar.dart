@@ -32,7 +32,7 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
       label: 'Treinos',
       initialLocation: Routes.build(
         path: "/training-plan",
-        param: "/1",
+        param: "/d45f35c3-8bdc-4a85-8beb-0af9cf60ccbd",
       ),
     ),
   ];

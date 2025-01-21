@@ -18,7 +18,7 @@ class TrainingPlansCreateOptionsScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => context.push("/training-plan/1/create"),
+                  onTap: () => context.push("/training-plan/$userId/create"),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(

@@ -12,8 +12,8 @@ class TrainingRepositoryRemote implements TrainingRepository {
   final ApiClient _apiClient;
 
   @override
-  Future<Result<List<Training>>> getTrainings(String trainingPlanId) async {
-    final result = await _apiClient.getTrainings(trainingPlanId);
+  Future<Result<List<Training>>> getTrainings(String dayId) async {
+    final result = await _apiClient.getTrainings(dayId);
 
     return result;
   }

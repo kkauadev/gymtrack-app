@@ -12,14 +12,14 @@ class TrainingPlanCreateViewModel {
     required this.userId,
   }) : _trainingPlanRepository = trainingPlanRepository {
     saveTrainingPlan = Command.createAsync(
-      _saveExercise,
+      _saveTrainingPlan,
       initialValue: null,
     );
   }
 
   late Command<TrainingPlan, Id?> saveTrainingPlan;
 
-  Future<Id?> _saveExercise(TrainingPlan obj) async {
+  Future<Id?> _saveTrainingPlan(TrainingPlan obj) async {
     final result = await _trainingPlanRepository.saveTrainingPlan(obj);
 
     if (result.isSuccess()) {

@@ -18,6 +18,29 @@ class TrainingPlansListScreen extends StatefulWidget {
 }
 
 class TrainingPlansListScreenState extends State<TrainingPlansListScreen> {
+  ListenableSubscription? errorSubscription;
+
+  @override
+  void didChangeDependencies() {
+    errorSubscription ??= widget.viewModel.deleteOne.errors
+        // .where((x) => x != null) // filter out the error value reset
+        .listen((error, _) {
+      showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('An error has occured!'),
+                content: Text(error.toString()),
+              ));
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    errorSubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,7 +57,9 @@ class TrainingPlansListScreenState extends State<TrainingPlansListScreen> {
                   onTap: () => trainingPlanExampleBuilder(context),
                 ),
                 ButtonAdd(
-                  onTap: () => context.push("/training-plan/1/create-options"),
+                  onTap: () => context.push(
+                    "/training-plan/${widget.viewModel.userId}/create-options",
+                  ),
                 )
               ],
             ),
@@ -51,14 +76,13 @@ class TrainingPlansListScreenState extends State<TrainingPlansListScreen> {
                   trainingPlan: data[i],
                   onTap: () => context.push(
                     Routes.build(
-                      path: "/training",
+                      path: "/day",
                       method: "/list",
                       param: "/${data[i].id}",
                     ),
                   ),
                   onTapDelete: () {
                     widget.viewModel.deleteOne.execute(data[i].id);
-                    widget.viewModel.load.execute(widget.viewModel.userId);
                   },
                 ),
               ),

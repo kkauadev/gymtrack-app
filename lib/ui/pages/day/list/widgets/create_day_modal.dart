@@ -1,38 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:gymtrack/domain/models/training.dart';
+import 'package:gymtrack/domain/models/day.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/text_form_field.dart';
-import 'package:gymtrack/ui/pages/training/list/view_models/training_list_view_model.dart';
+import 'package:gymtrack/ui/pages/day/list/view_models/day_list_view_model.dart';
 
-class CreateTrainingModal extends StatefulWidget {
-  const CreateTrainingModal({
+class CreateDayModal extends StatefulWidget {
+  const CreateDayModal({
     super.key,
     required this.viewModel,
-    required this.dayId,
+    required this.trainingPlanId,
     required this.onPressFinish,
   });
 
-  final TrainingListViewModel viewModel;
-  final String dayId;
+  final DayListViewModel viewModel;
+  final String trainingPlanId;
   final void Function() onPressFinish;
 
   @override
-  State<StatefulWidget> createState() => CreateTrainingModalState();
+  State<StatefulWidget> createState() => CreateDayModalState();
 }
 
-class CreateTrainingModalState extends State<CreateTrainingModal> {
+class CreateDayModalState extends State<CreateDayModal> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
 
   void _onPressFinish() {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState?.save.call();
-      var training = Training(
-        name: nameController.text.trim(),
-        dayId: widget.dayId,
-      );
-      widget.viewModel.saveTraining.execute(training);
-      widget.viewModel.loadTrainings(widget.dayId);
+
+      var day = Day(trainingPlanId: widget.trainingPlanId);
+      widget.viewModel.saveDay.execute(day);
+      widget.viewModel.loadDays(widget.trainingPlanId);
       widget.onPressFinish();
     }
   }
@@ -55,10 +53,10 @@ class CreateTrainingModalState extends State<CreateTrainingModal> {
             InputFormField(
               label: Text("Nome"),
               controller: nameController,
-              validator: CreateTrainingModalValidator.name,
+              validator: CreateDayModalValidator.name,
             ),
             ValueListenableBuilder<bool>(
-              valueListenable: widget.viewModel.saveTraining.isExecuting,
+              valueListenable: widget.viewModel.saveDay.isExecuting,
               builder: (context, isExecuting, child) {
                 return Button(
                   label: isExecuting ? "Carregando" : "Salvar",
@@ -73,7 +71,7 @@ class CreateTrainingModalState extends State<CreateTrainingModal> {
   }
 }
 
-class CreateTrainingModalValidator {
+class CreateDayModalValidator {
   static String? name(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "O nome não pode estar vazio.";
