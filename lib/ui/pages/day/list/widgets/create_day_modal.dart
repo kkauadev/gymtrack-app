@@ -28,9 +28,12 @@ class CreateDayModalState extends State<CreateDayModal> {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState?.save.call();
 
-      var day = Day(trainingPlanId: widget.trainingPlanId);
+      var day = Day(
+        trainingPlanId: widget.trainingPlanId,
+        name: nameController.text,
+      );
       widget.viewModel.saveDay.execute(day);
-      widget.viewModel.loadDays(widget.trainingPlanId);
+      widget.viewModel.loadRecursiveDay(widget.trainingPlanId);
       widget.onPressFinish();
     }
   }

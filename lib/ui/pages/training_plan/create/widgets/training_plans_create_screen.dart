@@ -44,6 +44,17 @@ TrainingPlanType parseType(String? value) {
   }
 }
 
+TrainingPlanVisibility parseVisibility(String? value) {
+  switch (value) {
+    case 'Privado':
+      return TrainingPlanVisibility.private;
+    case 'Protegido':
+      return TrainingPlanVisibility.protected;
+    default:
+      return TrainingPlanVisibility.public;
+  }
+}
+
 class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
   final formKey = GlobalKey<FormState>();
 
@@ -52,10 +63,15 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
   String? observation;
   String? nivel;
   String? type;
+  String? visibility;
   int? timeInDays;
 
   final List<String> dropdownTypeItems = ['Cardio', 'Exercicio'];
-
+  final List<String> dropdownVisibilityItems = [
+    'Publico',
+    'Protegido',
+    'Privado'
+  ];
   final List<String> dropdownLevelItems = ['Option 1', 'Option 1', 'Option 1'];
 
   @override
@@ -64,14 +80,14 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
       if (formKey.currentState?.validate() ?? false) {
         formKey.currentState?.save.call();
         widget.viewModel.saveTrainingPlan.execute(TrainingPlan(
-          name: name?.trim() ?? "",
-          pathology: pathologies?.trim() ?? "",
-          userId: widget.viewModel.userId,
-          timeInDays: timeInDays ?? 0,
-          observation: observation?.trim() ?? "",
-          level: parseLevel(nivel),
-          type: parseType(type),
-        ));
+            name: name?.trim() ?? "",
+            pathology: pathologies?.trim() ?? "",
+            authorId: widget.viewModel.authorId,
+            timeInDays: timeInDays ?? 0,
+            observation: observation?.trim() ?? "",
+            level: parseLevel(nivel),
+            type: parseType(type),
+            visibility: parseVisibility(visibility)));
       }
     }
 
@@ -108,7 +124,7 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                     context.push(
                       Routes.build(
                         path: "/training-plan",
-                        param: "/${widget.viewModel.userId}",
+                        param: "/${widget.viewModel.authorId}",
                       ),
                     );
                     context.pop();
@@ -156,6 +172,14 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                     ),
                     items: dropdownTypeItems,
                     onSelected: (value) => setState(() => type = value),
+                  ),
+                  Dropdown(
+                    label: Padding(
+                      padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
+                      child: Text("Visibilidade"),
+                    ),
+                    items: dropdownVisibilityItems,
+                    onSelected: (value) => setState(() => visibility = value),
                   ),
                   InputFormField(
                     onSaved: (value) => observation = value,

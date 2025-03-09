@@ -5,11 +5,11 @@ import 'package:gymtrack/domain/models/training_plan.dart';
 
 class TrainingPlanCreateViewModel {
   final TrainingPlanRepository _trainingPlanRepository;
-  final String userId;
+  final String authorId;
 
   TrainingPlanCreateViewModel({
     required TrainingPlanRepository trainingPlanRepository,
-    required this.userId,
+    required this.authorId,
   }) : _trainingPlanRepository = trainingPlanRepository {
     saveTrainingPlan = Command.createAsync(
       _saveTrainingPlan,

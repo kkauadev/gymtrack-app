@@ -1,9 +1,11 @@
 import 'package:gymtrack/domain/models/default.dart';
 
 class Day extends Default {
+  final String name;
   final String trainingPlanId;
 
   Day({
+    required this.name,
     required this.trainingPlanId,
     super.id,
     super.createdAt,
@@ -14,6 +16,7 @@ class Day extends Default {
   static Day fromJson(Map<String, dynamic> json) {
     return Day(
       id: json['id'] as String,
+      name: json['name'] as String,
       trainingPlanId: json['trainingPlanId'] as String,
       createdAt:
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
@@ -26,7 +29,7 @@ class Day extends Default {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': "Exemplo",
+      'name': name,
       'trainingPlanId': trainingPlanId,
     };
   }

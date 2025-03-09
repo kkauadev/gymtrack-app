@@ -12,24 +12,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    //return Container(
-    //  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-    //  child: Column(
-    //    children: [
-    //      TrainingCompleteBox(
-    //        completed: false,
-    //        onTap: () => print("asdasd"),
-    //      )
-    //    ],
-    //  ),
-    //);
     return Center(
-      child: Text(
-        "Nada aqui por enquanto, passe para a aba de treinos",
-        style: Theme.of(context).textTheme.headlineMedium,
-        textAlign: TextAlign.center,
-      ),
+      child: Center(child: Center(child: CircularProgressIndicator())),
     );
   }
 }

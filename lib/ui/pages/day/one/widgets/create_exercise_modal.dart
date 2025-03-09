@@ -3,7 +3,7 @@ import 'package:gymtrack/domain/models/exercise.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/dropdown.dart';
 import 'package:gymtrack/ui/core/widgets/text_form_field.dart';
-import 'package:gymtrack/ui/pages/exercise/list/view_models/exercise_list_view_model.dart';
+import 'package:gymtrack/ui/pages/day/one/view_models/day_view_model.dart';
 
 class CreateExerciseModal extends StatefulWidget {
   const CreateExerciseModal({
@@ -11,11 +11,23 @@ class CreateExerciseModal extends StatefulWidget {
     required this.viewModel,
     required this.dayId,
     required this.onPressFinish,
+    this.name,
+    this.description,
+    this.repsNumber,
+    this.setsNumber,
+    this.level,
+    this.observation,
   });
 
-  final ExerciseListViewModel viewModel;
+  final DayViewModel viewModel;
   final String dayId;
   final void Function() onPressFinish;
+  final String? name;
+  final String? description;
+  final int? repsNumber;
+  final int? setsNumber;
+  final String? level;
+  final String? observation;
 
   @override
   State<StatefulWidget> createState() => CreateExerciseModalState();
@@ -33,6 +45,15 @@ class CreateExerciseModalState extends State<CreateExerciseModal> {
   void onPressFinish() {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState?.save.call();
+
+      if (description?.trim().isEmpty == true) {
+        description = null;
+      }
+
+      if (observation?.trim().isEmpty == true) {
+        observation = null;
+      }
+
       widget.viewModel.saveExercise.execute(Exercise(
         name: name?.trim() ?? "",
         dayId: widget.dayId,
@@ -41,7 +62,6 @@ class CreateExerciseModalState extends State<CreateExerciseModal> {
         setsNumber: setsNumber ?? 0,
         observation: observation?.trim(),
       ));
-      widget.viewModel.load(widget.dayId);
       widget.onPressFinish();
     }
   }
@@ -59,6 +79,7 @@ class CreateExerciseModalState extends State<CreateExerciseModal> {
               label: Text("Nome"),
               onSaved: (value) => name = value,
               validator: CreateExerciseModalValidator.name,
+              initialValue: widget.name,
             ),
             InputFormField(
               label: Text("Descrição"),
@@ -75,6 +96,7 @@ class CreateExerciseModalState extends State<CreateExerciseModal> {
                     keyboardType: TextInputType.number,
                     onSaved: (value) => repsNumber = int.tryParse(value ?? '0'),
                     validator: CreateExerciseModalValidator.repsNumber,
+                    initialValue: widget.repsNumber?.toString(),
                   ),
                 ),
                 Expanded(
@@ -83,6 +105,7 @@ class CreateExerciseModalState extends State<CreateExerciseModal> {
                     keyboardType: TextInputType.number,
                     onSaved: (value) => setsNumber = int.tryParse(value ?? '0'),
                     validator: CreateExerciseModalValidator.setsNumber,
+                    initialValue: widget.setsNumber?.toString(),
                   ),
                 ),
               ],
@@ -96,6 +119,7 @@ class CreateExerciseModalState extends State<CreateExerciseModal> {
               label: Text("Observações"),
               onSaved: (value) => observation = value,
               validator: CreateExerciseModalValidator.observation,
+              initialValue: widget.observation,
             ),
             SizedBox(height: 16),
             ValueListenableBuilder<bool>(

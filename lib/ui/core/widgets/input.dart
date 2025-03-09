@@ -13,6 +13,7 @@ class Input extends StatelessWidget {
     this.errorText,
     this.validator,
     this.label,
+    this.initialValue,
   });
 
   final TextInputType? keyboardType;
@@ -23,6 +24,7 @@ class Input extends StatelessWidget {
   final String? errorText;
   final String? Function(String?)? validator;
   final Widget? label;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class Input extends StatelessWidget {
             icon,
             errorText,
           ),
+          initialValue: initialValue,
           validator: validator,
           maxLines: 1,
           maxLength: 255,

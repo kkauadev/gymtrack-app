@@ -32,7 +32,7 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
       label: 'Treinos',
       initialLocation: Routes.build(
         path: "/training-plan",
-        param: "/d45f35c3-8bdc-4a85-8beb-0af9cf60ccbd",
+        param: "/5505dd52-3d3b-4bf2-ab34-fa17ed6d1398",
       ),
     ),
   ];
@@ -44,9 +44,9 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
       bottomNavigationBar: BottomNavigationBar(
         items: tabs,
         showUnselectedLabels: true,
-        selectedItemColor: Theme.of(context).colorScheme.onSecondary,
+        selectedItemColor: Theme.of(context).colorScheme.onPrimary,
         unselectedItemColor: Colors.grey,
-        backgroundColor: Theme.of(context).colorScheme.secondary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         type: BottomNavigationBarType.fixed,
         elevation: 10,
         iconSize: 24,

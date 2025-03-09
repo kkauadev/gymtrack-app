@@ -20,17 +20,26 @@ class TrainingPlansListScreen extends StatefulWidget {
 class TrainingPlansListScreenState extends State<TrainingPlansListScreen> {
   ListenableSubscription? errorSubscription;
 
+  navigateDayList(String param) => context.push(
+        Routes.build(
+          path: "/day",
+          method: "/$param",
+          param: "/list",
+        ),
+      );
+
   @override
   void didChangeDependencies() {
     errorSubscription ??= widget.viewModel.deleteOne.errors
         // .where((x) => x != null) // filter out the error value reset
         .listen((error, _) {
       showDialog<void>(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('An error has occured!'),
-                content: Text(error.toString()),
-              ));
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('An error has occured!'),
+          content: Text(error.toString()),
+        ),
+      );
     });
     super.didChangeDependencies();
   }
@@ -69,21 +78,18 @@ class TrainingPlansListScreenState extends State<TrainingPlansListScreen> {
             whileExecuting: (context, lastValue, param) =>
                 Center(child: CircularProgressIndicator()),
             onData: (context, data, param) => Expanded(
-              child: ListView.separated(
-                separatorBuilder: (context, index) => SizedBox(height: 8),
-                itemCount: data.length,
-                itemBuilder: (context, i) => TrainingPlanCard(
-                  trainingPlan: data[i],
-                  onTap: () => context.push(
-                    Routes.build(
-                      path: "/day",
-                      method: "/list",
-                      param: "/${data[i].id}",
-                    ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => SizedBox(height: 8),
+                  itemCount: data.length,
+                  itemBuilder: (context, i) => TrainingPlanCard(
+                    trainingPlan: data[i],
+                    onTap: () => navigateDayList(data[i].id),
+                    onTapDelete: () {
+                      widget.viewModel.deleteOne.execute(data[i].id);
+                    },
                   ),
-                  onTapDelete: () {
-                    widget.viewModel.deleteOne.execute(data[i].id);
-                  },
                 ),
               ),
             ),

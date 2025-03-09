@@ -1,37 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:gymtrack/data/repositories/exercise/exercise_repository.dart';
+import 'package:gymtrack/data/services/api/model/exercise_with_day_api_mode.dart';
 import 'package:gymtrack/domain/models/exercise.dart';
 import 'package:gymtrack/domain/models/id.dart';
 
 class ExerciseListViewModel extends ChangeNotifier {
   final ExerciseRepository _exerciseRepository;
-  final String trainingId;
+  final String dayId;
 
   ExerciseListViewModel({
     required ExerciseRepository exerciseRepository,
-    required this.trainingId,
+    required this.dayId,
   }) : _exerciseRepository = exerciseRepository {
     load = Command.createAsync(_load, initialValue: []);
     saveExercise = Command.createAsync(
       _saveExercise,
       initialValue: null,
     );
+    saveExerciseWithDay = Command.createAsync(
+      _saveExerciseWithDay,
+      initialValue: null,
+    );
     deleteOneExercise = Command.createAsync(_deleteOne, initialValue: null);
 
-    saveExercise.addListener(() => load.execute(trainingId));
+    saveExercise.addListener(() => load.execute(dayId));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      load.execute(trainingId);
+      load.execute(dayId);
     });
   }
 
   late Command<String, List<Exercise>> load;
   late Command<Exercise, Id?> saveExercise;
   late Command<String, void> deleteOneExercise;
+  late Command<ExerciseWithDayApiMode, Id?> saveExerciseWithDay;
 
-  Future<List<Exercise>> _load(String trainingId) async {
-    var result = await _exerciseRepository.getExercises(trainingId);
+  Future<List<Exercise>> _load(String dayId) async {
+    var result = await _exerciseRepository.getExercises(dayId);
 
     if (result.isSuccess()) {
       return result.getOrDefault([]);
@@ -42,6 +48,16 @@ class ExerciseListViewModel extends ChangeNotifier {
 
   Future<Id?> _saveExercise(Exercise obj) async {
     final result = await _exerciseRepository.saveExercise(obj);
+
+    if (result.isSuccess()) {
+      return result.getOrNull();
+    } else {
+      throw Exception(result.exceptionOrNull());
+    }
+  }
+
+  Future<Id?> _saveExerciseWithDay(ExerciseWithDayApiMode obj) async {
+    final result = await _exerciseRepository.saveExerciseWithDay(obj);
 
     if (result.isSuccess()) {
       return result.getOrNull();

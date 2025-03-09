@@ -9,13 +9,13 @@ GoRoute exerciseRoute = GoRoute(
   path: Routes.build(
     path: "/exercise",
     method: "/list",
-    param: "/:trainingId",
+    param: "/:dayId",
   ),
   pageBuilder: (context, state) => NoTransitionPage(
     child: ExerciceListScreen(
       viewModel: ExerciseListViewModel(
         exerciseRepository: Provider.of<ExerciseRepositoryRemote>(context),
-        trainingId: state.pathParameters['trainingId']!,
+        dayId: state.pathParameters['dayId']!,
       ),
     ),
   ),

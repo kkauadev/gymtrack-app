@@ -47,7 +47,7 @@ class ExerciceListScreenState extends State<ExerciceListScreen> {
                         notes: "dasdas",
                         onTapDelete: () {
                           widget.viewModel.deleteOneExercise(data[index].id);
-                          widget.viewModel.load(widget.viewModel.trainingId);
+                          widget.viewModel.load(widget.viewModel.dayId);
                         },
                         onTapEdit: () => {},
                       );
@@ -60,7 +60,7 @@ class ExerciceListScreenState extends State<ExerciceListScreen> {
                               title: "Novo Exercicio",
                               content: CreateExerciseModal(
                                 viewModel: widget.viewModel,
-                                trainingId: widget.viewModel.trainingId,
+                                dayId: widget.viewModel.dayId,
                                 onPressFinish: () {
                                   Navigator.of(context).pop();
                                 },

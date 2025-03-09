@@ -2,7 +2,7 @@ import 'package:gymtrack/domain/models/default.dart';
 
 class Exercise extends Default {
   Exercise({
-    required this.trainingId,
+    required this.dayId,
     required this.name,
     required this.setsNumber,
     required this.repsNumber,
@@ -14,7 +14,7 @@ class Exercise extends Default {
     super.deletedAt,
   });
 
-  final String trainingId;
+  final String dayId;
   final String name;
   final int setsNumber;
   final int repsNumber;
@@ -23,7 +23,7 @@ class Exercise extends Default {
 
   static Exercise fromJson(Map<String, dynamic> json) {
     return Exercise(
-      trainingId: json['trainingId'],
+      dayId: json['dayId'],
       id: json['id'],
       name: json['name'],
       repsNumber: json['repsNumber'],
@@ -42,7 +42,7 @@ class Exercise extends Default {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'trainingId': trainingId,
+      'dayId': dayId,
       'type': 1,
       'setsNumber': setsNumber,
       'repsNumber': repsNumber,

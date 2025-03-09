@@ -8,6 +8,7 @@ class InformationTab extends StatelessWidget {
     this.observations,
     this.objective,
     required this.level,
+    required this.visibility,
     this.daysPerWeek,
     this.timeRecommendation,
   });
@@ -17,6 +18,7 @@ class InformationTab extends StatelessWidget {
   final String? observations;
   final String? objective;
   final int level;
+  final int visibility;
   final int? daysPerWeek;
   final String? timeRecommendation;
 
@@ -35,6 +37,17 @@ class InformationTab extends StatelessWidget {
       }
     }
 
+    visibilityText(int value) {
+      switch (value) {
+        case 2:
+          return "Privado";
+        case 1:
+          return "Protegido";
+        case 0:
+          return "Publico";
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Column(
@@ -49,6 +62,8 @@ class InformationTab extends StatelessWidget {
               TrainingInformation(name: "Observações", value: observations),
               TrainingInformation(name: "Objetivo", value: objective),
               TrainingInformation(name: "Nível", value: levelText(level)),
+              TrainingInformation(
+                  name: "Visibilidade", value: visibilityText(visibility)),
               TrainingInformation(
                 name: "Dias por semana",
                 value: daysPerWeek?.toString(),

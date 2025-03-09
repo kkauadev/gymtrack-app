@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gymtrack/domain/models/training_plan.dart';
-import 'package:gymtrack/ui/core/themes/colors.dart';
 
 class TrainingPlanCard extends StatefulWidget {
   const TrainingPlanCard({
@@ -21,7 +20,6 @@ class TrainingPlanCard extends StatefulWidget {
 }
 
 class TrainingPlanCardState extends State<TrainingPlanCard> {
-  bool _toggleStar = false;
   bool _showDeleteButton = false;
 
   _onTap() {
@@ -37,10 +35,6 @@ class TrainingPlanCardState extends State<TrainingPlanCard> {
     if (widget.onLongPress != null) widget.onLongPress!();
   }
 
-  _onTapStar() {
-    setState(() => _toggleStar = !_toggleStar);
-  }
-
   _onTapDelete() {
     if (widget.onTapDelete != null) widget.onTapDelete!();
   }
@@ -53,14 +47,23 @@ class TrainingPlanCardState extends State<TrainingPlanCard> {
       onTap: _onTap,
       onLongPress: _onLongPress,
       child: Container(
-        height: 100,
+        height: 70,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Theme.of(context).colorScheme.primary,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.25),
+              blurRadius: 2,
+              spreadRadius: 0,
+              offset: Offset(0, 0),
+            ),
+          ],
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(20, 16, 16, 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 8,
           children: [
             Expanded(
@@ -73,8 +76,7 @@ class TrainingPlanCardState extends State<TrainingPlanCard> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: textStyle.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                 ],
               ),
@@ -88,15 +90,10 @@ class TrainingPlanCardState extends State<TrainingPlanCard> {
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   )
-                : GestureDetector(
-                    onTap: _onTapStar,
-                    child: Icon(
-                      Icons.star_rounded,
-                      size: 48,
-                      color: _toggleStar
-                          ? Theme.of(context).colorScheme.warning
-                          : Theme.of(context).colorScheme.onPrimary,
-                    ),
+                : Icon(
+                    Icons.keyboard_arrow_right_rounded,
+                    size: 36,
+                    color: Colors.black,
                   )
           ],
         ),

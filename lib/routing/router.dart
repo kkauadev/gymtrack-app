@@ -2,7 +2,6 @@ import 'package:go_router/go_router.dart';
 import 'package:gymtrack/routing/route/day_route.dart';
 import 'package:gymtrack/routing/route/exercise_route.dart';
 import 'package:gymtrack/routing/route/training_plan_route.dart';
-import 'package:gymtrack/routing/route/training_route.dart';
 import 'package:gymtrack/routing/routes.dart';
 import 'package:gymtrack/ui/core/widgets/scaffold_with_navbar.dart';
 import 'package:gymtrack/ui/pages/auth/login/view_models/login_viewmodel.dart';
@@ -46,7 +45,6 @@ GoRouter router() {
         ],
       ),
       dayRoute,
-      trainingRoute,
       exerciseRoute,
     ],
   );

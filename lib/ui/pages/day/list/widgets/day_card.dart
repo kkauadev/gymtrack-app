@@ -69,7 +69,7 @@ class DayCardState extends State<DayCard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    widget.day.trainingPlanId,
+                    widget.day.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: textStyle.titleLarge!.copyWith(

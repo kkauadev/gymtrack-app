@@ -39,7 +39,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       ],
       currentIndex: widget.index,
       selectedItemColor: Theme.of(context).colorScheme.onPrimary,
-      unselectedItemColor: Colors.grey,
+      unselectedItemColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.primary,
       type: BottomNavigationBarType.fixed,
       elevation: 10,

@@ -39,7 +39,7 @@ GoRoute trainingPlanRoute = GoRoute(
           viewModel: TrainingPlanCreateViewModel(
             trainingPlanRepository:
                 Provider.of<TrainingPlanRepositoryRemote>(context),
-            userId: state.pathParameters['userId']!,
+            authorId: state.pathParameters['userId']!,
           ),
         ),
       ),

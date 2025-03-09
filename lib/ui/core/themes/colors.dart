@@ -13,14 +13,14 @@ abstract final class AppColors {
 
   static const lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: Color(0xFF1446c8),
+    primary: Color(0xFF0C6291),
     onPrimary: AppColors.white1,
     //secondary: Color(0xFFFFFFFF),
-    secondary: Color.fromRGBO(238, 238, 238, 1),
-    onSecondary: AppColors.black1,
-    tertiary: Color(0xFF777777),
+    secondary: Color(0xFFDB162F),
+    onSecondary: AppColors.white1,
+    tertiary: Color(0xFFF18701),
     onTertiary: AppColors.white1,
-    surface: Colors.white,
+    surface: Color(0xFFFCFCFC),
     onSurface: AppColors.black1,
     error: Colors.red,
     onError: Colors.white,
@@ -30,7 +30,7 @@ abstract final class AppColors {
 
   static const darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
-    primary: AppColors.black1,
+    primary: Color(0xFF0C6291),
     onPrimary: AppColors.white1,
     secondary: AppColors.blue1,
     onSecondary: AppColors.white1,

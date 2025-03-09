@@ -8,7 +8,8 @@
         "program": "lib/main.dart",
         "args": [
           "--devtools",
-          "--no-enable-impeller"
+          "--no-enable-impeller",
+          "--verbose"
         ],
         "toolArgs": [
           "-d",
