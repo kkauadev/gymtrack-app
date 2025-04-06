@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:gymtrack/data/services/api/model/day_api_model.dart';
 import 'package:gymtrack/data/services/api/model/day_update_name.dart';
 import 'package:gymtrack/data/services/api/model/exercise_with_day_api_mode.dart';
+import 'package:gymtrack/data/services/auth_notifier_service.dart';
+import 'package:gymtrack/domain/exceptions/exception.dart';
 import 'package:gymtrack/domain/models/day.dart';
 import 'package:gymtrack/domain/models/exercise.dart';
 import 'package:gymtrack/domain/models/id.dart';
@@ -12,6 +15,7 @@ import 'package:result_dart/result_dart.dart';
 
 class ApiClient {
   ApiClient({
+    required this.authNotifierService,
     String? host,
     int? port,
     HttpClient Function()? clientFactory,
@@ -22,10 +26,10 @@ class ApiClient {
   final String _host;
   final int _port;
   final HttpClient Function() _clientFactory;
+  final AuthNotifierService authNotifierService;
 
   Future<Result<TrainingPlan>> getTrainingPlan(String trainingPlanId) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest<TrainingPlan>((client) async {
       final request =
           await client.get(_host, _port, '/training-plan/$trainingPlanId');
       final response = await request.close();
@@ -38,16 +42,11 @@ class ApiClient {
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<List<TrainingPlan>>> getTrainingPlans(String userId) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest<List<TrainingPlan>>((client) async {
       final request =
           await client.get(_host, _port, '/training-plan/list/$userId');
       final response = await request.close();
@@ -55,24 +54,16 @@ class ApiClient {
         final stringData = await response.transform(utf8.decoder).join();
         final json = jsonDecode(stringData) as List<dynamic>;
         return Success(
-          json.map((element) {
-            return TrainingPlan.fromJson(element);
-          }).toList(),
+          json.map((element) => TrainingPlan.fromJson(element)).toList(),
         );
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<List<Exercise>>> getExercises(String dayId) async {
-    final client = _clientFactory();
-
-    try {
+    return makeRequest<List<Exercise>>((client) async {
       var request = await client.get(_host, _port, '/exercise/list/$dayId');
       var response = await request.close();
 
@@ -85,41 +76,26 @@ class ApiClient {
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<List<Day>>> getDays(String trainingPlanId) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest<List<Day>>((client) async {
       final request =
           await client.get(_host, _port, '/day/list/$trainingPlanId');
       final response = await request.close();
       if (response.statusCode == 200) {
         final stringData = await response.transform(utf8.decoder).join();
         final json = jsonDecode(stringData) as List<dynamic>;
-        return Success(
-          json.map((element) {
-            return Day.fromJson(element);
-          }).toList(),
-        );
+        return Success(json.map((element) => Day.fromJson(element)).toList());
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<Id>> saveExercise(Exercise obj) async {
-    final client = _clientFactory();
-
-    try {
+    return makeRequest<Id>((client) async {
       var request = await client.post(_host, _port, '/exercise');
       request.headers.set(
         HttpHeaders.contentTypeHeader,
@@ -140,17 +116,11 @@ class ApiClient {
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<Id>> saveExerciseWithDay(ExerciseWithDayApiMode obj) async {
-    final client = _clientFactory();
-
-    try {
+    return makeRequest<Id>((client) async {
       var request = await client.post(_host, _port, '/exercise');
       request.headers.set(
         HttpHeaders.contentTypeHeader,
@@ -171,17 +141,11 @@ class ApiClient {
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<Id>> saveTrainingPlan(TrainingPlan obj) async {
-    final client = _clientFactory();
-
-    try {
+    return makeRequest<Id>((client) async {
       var request = await client.post(_host, _port, '/training-plan');
       request.headers.set(
         HttpHeaders.contentTypeHeader,
@@ -202,17 +166,11 @@ class ApiClient {
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<Id>> saveDay(Day obj) async {
-    final client = _clientFactory();
-
-    try {
+    return makeRequest<Id>((client) async {
       var request = await client.post(_host, _port, '/day');
       request.headers.set(
         HttpHeaders.contentTypeHeader,
@@ -233,16 +191,11 @@ class ApiClient {
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result> deleteOneTrainingPlan(String trainingPlanId) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest((client) async {
       final req =
           await client.delete(_host, _port, '/training-plan/$trainingPlanId');
       final res = await req.close();
@@ -250,49 +203,34 @@ class ApiClient {
       return res.statusCode == 200
           ? Success("Success")
           : Failure(HttpException("Invalid response"));
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result> deleteDay(String dayId) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest((client) async {
       final req = await client.delete(_host, _port, '/day/$dayId');
       final res = await req.close();
 
       return res.statusCode == 200
-          ? Success("Success")
+          ? Success.unit()
           : Failure(HttpException("Invalid response"));
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result> deleteOneExercise(String exerciseId) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest((client) async {
       final req = await client.delete(_host, _port, '/exercise/$exerciseId');
       final res = await req.close();
 
       return res.statusCode == 200
-          ? Success("Success")
+          ? Success.unit()
           : Failure(HttpException("Invalid response"));
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<List<DayApiModel>>> getRecursiveDay(
       String trainingPlanId) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest<List<DayApiModel>>((client) async {
       final request = await client.get(
           _host, _port, '/day/list/recursivaly/$trainingPlanId');
       final response = await request.close();
@@ -300,23 +238,16 @@ class ApiClient {
         final stringData = await response.transform(utf8.decoder).join();
         final json = jsonDecode(stringData) as List<dynamic>;
         return Success(
-          json.map((element) {
-            return DayApiModel.fromJson(element);
-          }).toList(),
+          json.map((element) => DayApiModel.fromJson(element)).toList(),
         );
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<DayApiModel>> getOneRecursiveDay(String dayId) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest<DayApiModel>((client) async {
       final request = await client.get(_host, _port, '/day/recursivaly/$dayId');
       final response = await request.close();
       if (response.statusCode == 200) {
@@ -326,16 +257,11 @@ class ApiClient {
       } else {
         return Failure(HttpException("Invalid response"));
       }
-    } catch (e) {
-      return Failure(Exception(e));
-    } finally {
-      client.close();
-    }
+    });
   }
 
   Future<Result<String>> updateDayName(DayUpdateName data) async {
-    final client = _clientFactory();
-    try {
+    return makeRequest<String>((client) async {
       final request =
           await client.put(_host, _port, '/day/update/name/${data.dayId}');
       request.add(utf8.encode(jsonEncode(data.toJson())));
@@ -348,6 +274,21 @@ class ApiClient {
       } else {
         return Failure(HttpException("Invalid response"));
       }
+    });
+  }
+
+  Future<Result<T>> makeRequest<T extends Object>(
+      Future<Result<T>> Function(HttpClient client) func) async {
+    final client = _clientFactory();
+
+    try {
+      return await func(client);
+    } on SocketException {
+      return Failure(NetworkException());
+    } on FormatException {
+      return Failure(FormatException());
+    } on TimeoutException {
+      return Failure(TimeoutException("Tempo limite de conexão excedido."));
     } catch (e) {
       return Failure(Exception(e));
     } finally {
