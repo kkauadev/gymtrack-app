@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/routing/routes.dart';
-import 'package:gymtrack/ui/pages/training_plan/list/view_models/training_plans_list_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/list/training_plans_list_view_model.dart';
 import 'package:gymtrack/ui/pages/training_plan/list/widgets/button_add.dart';
 import 'package:gymtrack/ui/pages/training_plan/list/widgets/button_help.dart';
 import 'package:gymtrack/ui/pages/training_plan/list/widgets/training_plan_card.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymtrack/ui/pages/exercise/list/widgets/exercice_list_screen.dart';
+import 'package:gymtrack/ui/pages/exercise/list/exercice_list_screen.dart';
 import 'package:gymtrack/ui/pages/exercise/list/widgets/info_chip.dart';
 
 class ExerciseInfoCard extends StatefulWidget {

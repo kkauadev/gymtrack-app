@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:gymtrack/ui/core/widgets/default_loading.dart';
-import 'package:gymtrack/ui/pages/exercise/list/view_models/exercise_list_view_model.dart';
+import 'package:gymtrack/ui/pages/exercise/list/exercise_list_view_model.dart';
 import 'package:gymtrack/ui/core/widgets/modal_builder.dart';
 import 'package:gymtrack/ui/pages/exercise/list/widgets/create_exercise_modal.dart';
 import 'package:gymtrack/ui/pages/exercise/list/widgets/exercise_info_card.dart';

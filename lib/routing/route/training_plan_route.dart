@@ -1,11 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/data/repositories/trainingplan/training_plan_repository_remote.dart';
 import 'package:gymtrack/routing/routes.dart';
-import 'package:gymtrack/ui/pages/training_plan/create/view_models/training_plan_create_view_model.dart';
-import 'package:gymtrack/ui/pages/training_plan/create/widgets/training_plans_create_screen.dart';
-import 'package:gymtrack/ui/pages/training_plan/create_options/widgets/training_plans_create_options_screen.dart';
-import 'package:gymtrack/ui/pages/training_plan/list/view_models/training_plans_list_view_model.dart';
-import 'package:gymtrack/ui/pages/training_plan/list/widgets/training_plans_list_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/create/training_plan_create_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/create/training_plans_create_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/create_options/training_plans_create_options_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/list/training_plans_list_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/list/training_plans_list_screen.dart';
 import 'package:provider/provider.dart';
 
 GoRoute trainingPlanRoute = GoRoute(

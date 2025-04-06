@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymtrack/domain/models/day.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/text_form_field.dart';
-import 'package:gymtrack/ui/pages/day/list/view_models/day_list_view_model.dart';
+import 'package:gymtrack/ui/pages/day/list/day_list_view_model.dart';
 
 class CreateDayModal extends StatefulWidget {
   const CreateDayModal({

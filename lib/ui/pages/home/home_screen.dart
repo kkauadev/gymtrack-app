@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymtrack/data/services/auth_notifier_service.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
-import 'package:gymtrack/ui/pages/home/view_models/home_viewmodel.dart';
+import 'package:gymtrack/ui/pages/home/home_viewmodel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.viewModel});

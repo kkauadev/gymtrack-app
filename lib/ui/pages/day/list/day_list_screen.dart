@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:gymtrack/ui/core/widgets/default_loading.dart';
 import 'package:gymtrack/ui/core/widgets/modal_builder.dart';
-import 'package:gymtrack/ui/pages/day/list/view_models/day_list_view_model.dart';
+import 'package:gymtrack/ui/pages/day/list/day_list_view_model.dart';
 import 'package:gymtrack/ui/pages/day/list/widgets/a.dart';
 import 'package:gymtrack/ui/pages/day/list/widgets/create_day_modal.dart';
 import 'package:gymtrack/ui/pages/day/list/widgets/information_tab.dart';

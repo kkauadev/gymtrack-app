@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/data/services/api/model/signup_request_model.dart';
 import 'package:gymtrack/routing/routes.dart';
-import 'package:gymtrack/ui/pages/auth/signup/view_models/signup_viewmodel.dart';
+import 'package:gymtrack/ui/pages/auth/signup/signup_viewmodel.dart';
 
-import '../../../../core/widgets/button.dart';
-import '../../../../core/widgets/input.dart';
+import '../../../core/widgets/button.dart';
+import '../../../core/widgets/input.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key, required this.viewModel});

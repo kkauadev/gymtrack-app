@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymtrack/data/services/api/model/login_request_model.dart';
 import 'package:gymtrack/routing/routes.dart';
 import 'package:gymtrack/ui/core/widgets/default_loading.dart';
-import 'package:gymtrack/ui/pages/auth/login/view_models/login_viewmodel.dart';
+import 'package:gymtrack/ui/pages/auth/login/login_viewmodel.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/input.dart';
 

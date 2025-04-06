@@ -7,14 +7,14 @@ import 'package:gymtrack/routing/route/exercise_route.dart';
 import 'package:gymtrack/routing/route/training_plan_route.dart';
 import 'package:gymtrack/routing/routes.dart';
 import 'package:gymtrack/ui/core/widgets/scaffold_with_navbar.dart';
-import 'package:gymtrack/ui/pages/auth/login/view_models/login_viewmodel.dart';
-import 'package:gymtrack/ui/pages/auth/login/widgets/login_screen.dart';
-import 'package:gymtrack/ui/pages/auth/signup/view_models/signup_viewmodel.dart';
-import 'package:gymtrack/ui/pages/auth/signup/widgets/signup_screen.dart';
-import 'package:gymtrack/ui/pages/home/view_models/home_viewmodel.dart';
-import 'package:gymtrack/ui/pages/home/widgets/home_screen.dart';
-import 'package:gymtrack/ui/pages/settings/screens/settings_screen.dart';
-import 'package:gymtrack/ui/pages/settings/view_models/settings_view_model.dart';
+import 'package:gymtrack/ui/pages/auth/login/login_viewmodel.dart';
+import 'package:gymtrack/ui/pages/auth/login/login_screen.dart';
+import 'package:gymtrack/ui/pages/auth/signup/signup_viewmodel.dart';
+import 'package:gymtrack/ui/pages/auth/signup/signup_screen.dart';
+import 'package:gymtrack/ui/pages/home/home_viewmodel.dart';
+import 'package:gymtrack/ui/pages/home/home_screen.dart';
+import 'package:gymtrack/ui/pages/settings/settings_screen.dart';
+import 'package:gymtrack/ui/pages/settings/settings_view_model.dart';
 import 'package:provider/provider.dart';
 
 GoRouter router() {

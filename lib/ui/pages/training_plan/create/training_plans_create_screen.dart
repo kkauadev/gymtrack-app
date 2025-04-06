@@ -6,7 +6,7 @@ import 'package:gymtrack/routing/routes.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/dropdown.dart';
 import 'package:gymtrack/ui/core/widgets/text_form_field.dart';
-import 'package:gymtrack/ui/pages/training_plan/create/view_models/training_plan_create_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/create/training_plan_create_view_model.dart';
 
 class TrainingPlansCreateScreen extends StatefulWidget {
   const TrainingPlansCreateScreen({

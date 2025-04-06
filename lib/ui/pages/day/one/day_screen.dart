@@ -4,7 +4,7 @@ import 'package:gymtrack/data/services/api/model/day_api_model.dart';
 import 'package:gymtrack/data/services/api/model/day_update_name.dart';
 import 'package:gymtrack/ui/core/widgets/modal_builder.dart';
 import 'package:gymtrack/ui/pages/day/list/widgets/a.dart';
-import 'package:gymtrack/ui/pages/day/one/view_models/day_view_model.dart';
+import 'package:gymtrack/ui/pages/day/one/day_view_model.dart';
 import 'package:gymtrack/ui/pages/day/one/widgets/create_exercise_modal.dart';
 
 class DayScreen extends StatefulWidget {

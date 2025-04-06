@@ -3,7 +3,7 @@ import 'package:gymtrack/domain/models/exercise.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/dropdown.dart';
 import 'package:gymtrack/ui/core/widgets/text_form_field.dart';
-import 'package:gymtrack/ui/pages/day/one/view_models/day_view_model.dart';
+import 'package:gymtrack/ui/pages/day/one/day_view_model.dart';
 
 class CreateExerciseModal extends StatefulWidget {
   const CreateExerciseModal({
