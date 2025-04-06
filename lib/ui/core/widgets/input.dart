@@ -14,6 +14,7 @@ class Input extends StatelessWidget {
     this.validator,
     this.label,
     this.initialValue,
+    this.controller,
   });
 
   final TextInputType? keyboardType;
@@ -25,6 +26,7 @@ class Input extends StatelessWidget {
   final String? Function(String?)? validator;
   final Widget? label;
   final String? initialValue;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class Input extends StatelessWidget {
           keyboardType: keyboardType,
           obscureText: false,
           onChanged: onChanged,
+          controller: controller,
           decoration: defaultDecoration(
             context,
             hintText,
@@ -100,6 +103,7 @@ class PasswordInput extends StatefulWidget {
     this.showPassword,
     this.onPressShowPassword,
     this.validator,
+    this.controller,
   });
 
   final String? labelText;
@@ -108,6 +112,7 @@ class PasswordInput extends StatefulWidget {
   final void Function()? onPressShowPassword;
   final bool? showPassword;
   final String? Function(String?)? validator;
+  final TextEditingController? controller;
 
   @override
   State<PasswordInput> createState() => _PasswordInputState();
@@ -126,6 +131,7 @@ class _PasswordInputState extends State<PasswordInput> {
       obscureText: defineObscureText(widget.showPassword, _isObscured),
       maxLength: 255,
       maxLengthEnforcement: MaxLengthEnforcement.none,
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,

@@ -17,4 +17,19 @@ class SharedPreferencesService {
       return Failure(Exception(e));
     }
   }
+
+  Future<Result> saveToken(String? token) async {
+    try {
+      final sharedPreferences = await SharedPreferences.getInstance();
+      if (token == null) {
+        await sharedPreferences.remove(_tokenKey);
+      } else {
+        await sharedPreferences.setString(_tokenKey, token);
+      }
+
+      return Success.unit();
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }
