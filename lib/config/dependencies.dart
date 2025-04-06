@@ -2,6 +2,7 @@ import 'package:gymtrack/data/repositories/auth/auth_repository_remote.dart';
 import 'package:gymtrack/data/repositories/day/day_repository_remote.dart';
 import 'package:gymtrack/data/repositories/exercise/exercise_repository_remote.dart';
 import 'package:gymtrack/data/repositories/trainingplan/training_plan_repository_remote.dart';
+import 'package:gymtrack/data/repositories/user/user_repository_remote.dart';
 import 'package:gymtrack/data/services/api/api_client.dart';
 import 'package:gymtrack/data/services/api/auth_api_client.dart';
 import 'package:gymtrack/data/services/auth_notifier_service.dart';
@@ -22,7 +23,9 @@ List<SingleChildWidget> get providersRemote {
       create: (context) => AuthRepositoryRemote(
           apiClient: context.read(), authNotifierService: context.read()),
     ),
-
+    Provider(
+      create: (context) => UserRepositoryRemote(apiClient: context.read()),
+    ),
     Provider(
       create: (context) => TrainingPlanRepositoryRemote(
         apiClient: context.read(),

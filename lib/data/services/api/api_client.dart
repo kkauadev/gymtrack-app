@@ -11,6 +11,7 @@ import 'package:gymtrack/domain/models/day.dart';
 import 'package:gymtrack/domain/models/exercise.dart';
 import 'package:gymtrack/domain/models/id.dart';
 import 'package:gymtrack/domain/models/training_plan.dart';
+import 'package:gymtrack/domain/models/user.dart';
 import 'package:result_dart/result_dart.dart';
 
 class ApiClient {
@@ -271,6 +272,21 @@ class ApiClient {
         final stringData = await response.transform(utf8.decoder).join();
         final json = jsonDecode(stringData);
         return Success(json);
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
+  Future<Result<User>> getUser(String userId) async {
+    return makeRequest<User>((client) async {
+      final req = await client.get(_host, _port, 'user/$userId');
+
+      final res = await req.close();
+      if (res.statusCode == 200) {
+        final stringData = await res.transform(utf8.decoder).join();
+        final json = jsonDecode(stringData);
+        return Success(User.fromJson(json));
       } else {
         return Failure(HttpException("Invalid response"));
       }

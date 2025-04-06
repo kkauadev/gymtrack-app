@@ -35,6 +35,13 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
         param: "/5505dd52-3d3b-4bf2-ab34-fa17ed6d1398",
       ),
     ),
+    MyCustomBottomNavBarItem(
+      label: "Configurações",
+      initialLocation: "/settings",
+      icon: Icon(
+        Icons.settings,
+      ),
+    )
   ];
 
   @override
@@ -43,7 +50,8 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
       body: SafeArea(child: widget.child),
       bottomNavigationBar: BottomNavigationBar(
         items: tabs,
-        showUnselectedLabels: true,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         selectedItemColor: Theme.of(context).colorScheme.onPrimary,
         unselectedItemColor: Colors.grey,
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -52,9 +60,7 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
         iconSize: 24,
         selectedFontSize: 14,
         unselectedFontSize: 12,
-        onTap: (int index) {
-          _goOtherTab(context, index);
-        },
+        onTap: (int index) => _goOtherTab(context, index),
         currentIndex: _currentIndex,
       ),
     );
@@ -65,9 +71,7 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
     GoRouter router = GoRouter.of(context);
     String location = tabs[index].initialLocation;
 
-    setState(() {
-      _currentIndex = index;
-    });
+    setState(() => _currentIndex = index);
     if (index == 3) {
       context.push('/login');
     } else {

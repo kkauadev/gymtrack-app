@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/data/repositories/auth/auth_repository_remote.dart';
+import 'package:gymtrack/data/repositories/user/user_repository_remote.dart';
 import 'package:gymtrack/data/services/auth_notifier_service.dart';
 import 'package:gymtrack/routing/route/day_route.dart';
 import 'package:gymtrack/routing/route/exercise_route.dart';
@@ -12,6 +13,9 @@ import 'package:gymtrack/ui/pages/auth/signup/view_models/signup_viewmodel.dart'
 import 'package:gymtrack/ui/pages/auth/signup/widgets/signup_screen.dart';
 import 'package:gymtrack/ui/pages/home/view_models/home_viewmodel.dart';
 import 'package:gymtrack/ui/pages/home/widgets/home_screen.dart';
+import 'package:gymtrack/ui/pages/settings/screens/settings_screen.dart';
+import 'package:gymtrack/ui/pages/settings/view_models/settings_view_model.dart';
+import 'package:provider/provider.dart';
 
 GoRouter router() {
   return GoRouter(
@@ -48,13 +52,23 @@ GoRouter router() {
           child: ScaffoldWithNavbar(
             location: Routes.build(path: "/home"),
             child: child,
-              ),
+          ),
         ),
         routes: [
           GoRoute(
             path: Routes.build(path: "/home"),
             pageBuilder: (context, state) => NoTransitionPage(
               child: HomeScreen(viewModel: HomeViewModel()),
+            ),
+          ),
+          GoRoute(
+            path: "/settings",
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: SettingsScreen(
+                viewModel: SettingsViewModel(
+                  userRepository: Provider.of<UserRepositoryRemote>(context),
+                ),
+              ),
             ),
           ),
           trainingPlanRoute
