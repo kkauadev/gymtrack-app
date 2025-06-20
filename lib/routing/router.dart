@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/data/repositories/auth/auth_repository_remote.dart';
-import 'package:gymtrack/data/repositories/user/user_repository_remote.dart';
 import 'package:gymtrack/data/services/auth_notifier_service.dart';
 import 'package:gymtrack/routing/route/day_route.dart';
 import 'package:gymtrack/routing/route/exercise_route.dart';
@@ -13,8 +12,7 @@ import 'package:gymtrack/ui/pages/auth/signup/signup_viewmodel.dart';
 import 'package:gymtrack/ui/pages/auth/signup/signup_screen.dart';
 import 'package:gymtrack/ui/pages/home/home_viewmodel.dart';
 import 'package:gymtrack/ui/pages/home/home_screen.dart';
-import 'package:gymtrack/ui/pages/settings/settings_screen.dart';
-import 'package:gymtrack/ui/pages/settings/settings_view_model.dart';
+import 'package:gymtrack/ui/pages/settings/settings_route.dart';
 import 'package:provider/provider.dart';
 
 GoRouter router() {
@@ -61,16 +59,7 @@ GoRouter router() {
               child: HomeScreen(viewModel: HomeViewModel()),
             ),
           ),
-          GoRoute(
-            path: "/settings",
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: SettingsScreen(
-                viewModel: SettingsViewModel(
-                  userRepository: Provider.of<UserRepositoryRemote>(context),
-                ),
-              ),
-            ),
-          ),
+          settingsRoute,
           trainingPlanRoute
         ],
       ),

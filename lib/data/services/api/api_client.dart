@@ -293,6 +293,24 @@ class ApiClient {
     });
   }
 
+  Future<Result<User>> updateUser(User user) async {
+    return makeRequest<User>((client) async {
+      print("$_host/$_port/${user.id}");
+      final req = await client.put(_host, _port, 'user/${user.id}');
+      req.headers.contentType = ContentType.json;
+      req.add(utf8.encode(jsonEncode(user.toJson())));
+
+      final res = await req.close();
+      if (res.statusCode == 200) {
+        final stringData = await res.transform(utf8.decoder).join();
+        final json = jsonDecode(stringData);
+        return Success(User.fromJson(json));
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
   Future<Result<T>> makeRequest<T extends Object>(
       Future<Result<T>> Function(HttpClient client) func) async {
     final client = _clientFactory();

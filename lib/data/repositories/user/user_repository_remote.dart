@@ -12,4 +12,9 @@ class UserRepositoryRemote implements UserRepository {
   Future<Result<User>> getUser(String userId) {
     return _apiClient.getUser(userId);
   }
+
+  @override
+  Future<Result<User>> updateUser(User user) {
+    return _apiClient.updateUser(user);
+  }
 }
