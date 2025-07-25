@@ -76,6 +76,8 @@ GoRouter router() {
               return SettingsScreen(
                 viewModel: SettingsViewModel(
                   userRepository: Provider.of<UserRepositoryRemote>(context),
+                  authNotifierService:
+                      Provider.of<AuthNotifierService>(context),
                 ),
               );
             },

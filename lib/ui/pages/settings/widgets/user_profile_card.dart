@@ -1,48 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:gymtrack/domain/models/user.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class UserProfileCard extends StatelessWidget {
-  const UserProfileCard({super.key, required this.user});
-
-  final User user;
+  const UserProfileCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 125,
       margin: EdgeInsets.only(bottom: 16),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Color(0xFFEAEAEA),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      padding: EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Row(
-              spacing: 12,
-              children: [
-                //Container(
-                //  height: 80,
-                //  width: 80,
-                //  decoration: BoxDecoration(
-                //    shape: BoxShape.circle,
-                //    color: Color(0xFFAAAAAA),
-                //  ),
-                //),
-                Expanded(
-                  child: Text(
-                    user.username,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+          Row(
+            children: [
+              Icon(
+                PhosphorIcons.fire(PhosphorIconsStyle.fill),
+                size: 80,
+                color: Color(0xffe60f0f),
+              ),
+              Expanded(
+                child: Text(
+                  "30",
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontSize: 56,
+                      ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Icon(Icons.keyboard_arrow_right_rounded, size: 36)
+          Container(
+            margin: EdgeInsets.only(left: 20),
+            child: Text(
+              "de sequencia",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          )
         ],
       ),
     );
