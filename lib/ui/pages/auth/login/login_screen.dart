@@ -1,6 +1,6 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_command/flutter_command.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/data/services/api/model/login_request_model.dart';
 import 'package:gymtrack/routing/routes.dart';
@@ -19,8 +19,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isObscuredPassword = true;
-
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -118,9 +116,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () => context.push(
-                                    Routes.build(path: "/signup"),
-                                  ),
+                              ..onTap = () =>
+                                  context.push(Routes.build(path: "/signup")),
                           ),
                         ],
                       ),

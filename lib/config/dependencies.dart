@@ -1,6 +1,7 @@
 import 'package:gymtrack/data/repositories/auth/auth_repository_remote.dart';
 import 'package:gymtrack/data/repositories/day/day_repository_remote.dart';
 import 'package:gymtrack/data/repositories/exercise/exercise_repository_remote.dart';
+import 'package:gymtrack/data/repositories/plan_subscription/plan_subscription_repository_remote.dart';
 import 'package:gymtrack/data/repositories/trainingplan/training_plan_repository_remote.dart';
 import 'package:gymtrack/data/repositories/user/user_repository_remote.dart';
 import 'package:gymtrack/data/services/api/api_client.dart';
@@ -36,6 +37,11 @@ List<SingleChildWidget> get providersRemote {
     ),
     Provider(
       create: (context) => ExerciseRepositoryRemote(apiClient: context.read()),
+    ),
+    Provider(
+      create: (context) => PlanSubscriptionRepositoryRemote(
+        apiClient: context.read(),
+      ),
     )
   ];
 }

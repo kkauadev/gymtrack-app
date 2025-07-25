@@ -1,4 +1,4 @@
-import 'package:flutter_command/flutter_command.dart';
+import 'package:command_it/command_it.dart';
 import 'package:gymtrack/data/repositories/auth/auth_repository.dart';
 import 'package:gymtrack/data/services/api/model/login_request_model.dart';
 

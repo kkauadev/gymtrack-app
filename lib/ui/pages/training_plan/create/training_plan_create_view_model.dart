@@ -1,15 +1,15 @@
-import 'package:flutter_command/flutter_command.dart';
+import 'package:command_it/command_it.dart';
 import 'package:gymtrack/data/repositories/trainingplan/training_plan_repository.dart';
 import 'package:gymtrack/domain/models/id.dart';
 import 'package:gymtrack/domain/models/training_plan.dart';
 
 class TrainingPlanCreateViewModel {
   final TrainingPlanRepository _trainingPlanRepository;
-  final String authorId;
+  final String userId;
 
   TrainingPlanCreateViewModel({
     required TrainingPlanRepository trainingPlanRepository,
-    required this.authorId,
+    required this.userId,
   }) : _trainingPlanRepository = trainingPlanRepository {
     saveTrainingPlan = Command.createAsync(
       _saveTrainingPlan,

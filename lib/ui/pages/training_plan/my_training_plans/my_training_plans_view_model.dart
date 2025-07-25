@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:gymtrack/data/repositories/trainingplan/training_plan_repository.dart';
 import 'package:gymtrack/domain/models/training_plan.dart';
 
-class TrainingPlansListViewModel extends ChangeNotifier {
+class MyTrainingPlansViewModel extends ChangeNotifier {
   final TrainingPlanRepository _trainingPlanRepository;
   final String userId;
 
-  TrainingPlansListViewModel(
-      {required TrainingPlanRepository trainingPlanRepository,
-      required this.userId})
-      : _trainingPlanRepository = trainingPlanRepository {
+  MyTrainingPlansViewModel({
+    required TrainingPlanRepository trainingPlanRepository,
+    required this.userId,
+  }) : _trainingPlanRepository = trainingPlanRepository {
     load = Command.createAsyncNoParam(
       _load,
       initialValue: [],
@@ -18,18 +18,14 @@ class TrainingPlansListViewModel extends ChangeNotifier {
 
     WidgetsBinding.instance.addPostFrameCallback((_) => load.execute());
   }
-
   late Command<void, List<TrainingPlan>> load;
 
-  List<TrainingPlan> get trainingPlans => _trainingPlans;
-  List<TrainingPlan> _trainingPlans = [];
-
   Future<List<TrainingPlan>> _load() async {
-    final result = await _trainingPlanRepository.getTrainingPlans();
+    final result =
+        await _trainingPlanRepository.getTrainingPlansByUserId(userId);
 
     if (result.isSuccess()) {
-      _trainingPlans = result.getOrDefault([]);
-      return _trainingPlans;
+      return result.getOrDefault([]);
     } else {
       throw Exception(result.exceptionOrNull()!);
     }

@@ -25,7 +25,7 @@ class AuthApiClient {
     final client = _clientFactory();
 
     try {
-      final req = await client.post(_host, _port, "/user");
+      final req = await client.post(_host, _port, "/identity/user");
       req.headers.set(
         HttpHeaders.contentTypeHeader,
         'application/json; charset=utf-8',
@@ -56,13 +56,18 @@ class AuthApiClient {
 
     try {
       return await func(client);
-    } on SocketException {
+    } on SocketException catch (e) {
+      print(e);
       return Failure(NetworkException());
-    } on FormatException {
+    } on FormatException catch (e) {
+      print(e);
+
       return Failure(FormatException());
-    } on TimeoutException {
+    } on TimeoutException catch (e) {
+      print(e);
       return Failure(TimeoutException("Tempo limite de conexão excedido."));
     } catch (e) {
+      print(e);
       return Failure(Exception(e));
     } finally {
       client.close();
@@ -71,7 +76,7 @@ class AuthApiClient {
 
   Future<Result<String>> login(LoginRequestModel data) async {
     return makeRequest<String>((client) async {
-      final req = await client.post(_host, _port, "/user/login");
+      final req = await client.post(_host, _port, "/identity/auth");
       req.headers.set(
           HttpHeaders.contentTypeHeader, 'application/json; charset=utf-8');
       req.headers
@@ -81,7 +86,7 @@ class AuthApiClient {
       final res = await req.close();
       final stringData = await res.transform(utf8.decoder).join();
 
-      if (res.statusCode == 201) {
+      if (res.statusCode == 200) {
         return Success(TokenApiModel.fromJson(jsonDecode(stringData)).token);
       }
 

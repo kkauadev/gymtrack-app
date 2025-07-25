@@ -19,7 +19,7 @@ abstract final class AppTheme {
     brightness: Brightness.light,
     colorScheme: AppColors.lightColorScheme,
     textTheme: TypografyCustomTheme().textTheme(AppColors.lightColorScheme),
-    tabBarTheme: TabBarCustomTheme.tabBarTheme(AppColors.lightColorScheme),
+    tabBarTheme: TabBarCustomTheme.tabBarTheme(AppColors.lightColorScheme).data,
     primaryTextTheme: TypografyCustomTheme().primaryTextTheme(
       AppColors.lightColorScheme,
     ),
@@ -57,7 +57,7 @@ abstract final class AppTheme {
     brightness: Brightness.dark,
     colorScheme: AppColors.darkColorScheme,
     textTheme: TypografyCustomTheme().textTheme(AppColors.darkColorScheme),
-    tabBarTheme: TabBarCustomTheme.tabBarTheme(AppColors.darkColorScheme),
+    tabBarTheme: TabBarCustomTheme.tabBarTheme(AppColors.darkColorScheme).data,
     primaryTextTheme: TypografyCustomTheme().primaryTextTheme(
       AppColors.lightColorScheme,
     ),

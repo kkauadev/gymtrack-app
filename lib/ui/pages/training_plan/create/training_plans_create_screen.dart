@@ -1,14 +1,24 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_command/flutter_command.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/domain/models/training_plan.dart';
-import 'package:gymtrack/routing/routes.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/dropdown.dart';
 import 'package:gymtrack/ui/core/widgets/text_form_field.dart';
 import 'package:gymtrack/ui/pages/training_plan/create/training_plan_create_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_training_plans/my_training_plans_screen.dart';
 
 class TrainingPlansCreateScreen extends StatefulWidget {
+  static const _pathTemplate = '/training-plan/:userId/create';
+
+  static String name = '/create';
+
+  static String getPath(Map<String, String> params) {
+    var path = _pathTemplate;
+    params.forEach((key, value) => path = path.replaceAll(':$key', value));
+    return path;
+  }
+
   const TrainingPlansCreateScreen({
     super.key,
     required this.viewModel,
@@ -21,38 +31,20 @@ class TrainingPlansCreateScreen extends StatefulWidget {
 }
 
 TrainingPlanLevel parseLevel(String? value) {
-  switch (value) {
-    case 'Basico':
-      return TrainingPlanLevel.basic;
-    case 'Intermediario':
-      return TrainingPlanLevel.intermediary;
-    case 'Avancado':
-      return TrainingPlanLevel.advanced;
-    default:
-      return TrainingPlanLevel.basic;
-  }
+  return switch (value) {
+    'Basico' => TrainingPlanLevel.basic,
+    'Intermediario' => TrainingPlanLevel.intermediary,
+    'Avancado' => TrainingPlanLevel.advanced,
+    _ => TrainingPlanLevel.basic
+  };
 }
 
 TrainingPlanType parseType(String? value) {
-  switch (value) {
-    case 'Cardio':
-      return TrainingPlanType.cardio;
-    case 'Exercicio':
-      return TrainingPlanType.exercise;
-    default:
-      return TrainingPlanType.exercise;
-  }
-}
-
-TrainingPlanVisibility parseVisibility(String? value) {
-  switch (value) {
-    case 'Privado':
-      return TrainingPlanVisibility.private;
-    case 'Protegido':
-      return TrainingPlanVisibility.protected;
-    default:
-      return TrainingPlanVisibility.public;
-  }
+  return switch (value) {
+    'Cardio' => TrainingPlanType.cardio,
+    'Exercicio' => TrainingPlanType.exercise,
+    _ => TrainingPlanType.exercise
+  };
 }
 
 class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
@@ -67,11 +59,6 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
   int? timeInDays;
 
   final List<String> dropdownTypeItems = ['Cardio', 'Exercicio'];
-  final List<String> dropdownVisibilityItems = [
-    'Publico',
-    'Protegido',
-    'Privado'
-  ];
   final List<String> dropdownLevelItems = ['Option 1', 'Option 1', 'Option 1'];
 
   @override
@@ -79,15 +66,18 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
     void onSubmit() {
       if (formKey.currentState?.validate() ?? false) {
         formKey.currentState?.save.call();
-        widget.viewModel.saveTrainingPlan.execute(TrainingPlan(
+        widget.viewModel.saveTrainingPlan.execute(
+          TrainingPlan(
             name: name?.trim() ?? "",
             pathology: pathologies?.trim() ?? "",
-            authorId: widget.viewModel.authorId,
+            authorId: widget.viewModel.userId,
             timeInDays: timeInDays ?? 0,
             observation: observation?.trim() ?? "",
             level: parseLevel(nivel),
             type: parseType(type),
-            visibility: parseVisibility(visibility)));
+            visibility: TrainingPlanVisibility.private,
+          ),
+        );
       }
     }
 
@@ -120,14 +110,10 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Button(
                   label: "Continuar",
-                  onPressed: () {
-                    context.push(
-                      Routes.build(
-                        path: "/training-plan",
-                        param: "/${widget.viewModel.authorId}",
-                      ),
-                    );
-                    context.pop();
+                  onPressed: () async {
+                    await context.push(MyTrainingPlansScreen.getPath(
+                      {'userId': widget.viewModel.userId},
+                    ));
                   },
                 ),
               ),
@@ -138,7 +124,10 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Plano de Treino"),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           reverse: true,
@@ -172,14 +161,6 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                     ),
                     items: dropdownTypeItems,
                     onSelected: (value) => setState(() => type = value),
-                  ),
-                  Dropdown(
-                    label: Padding(
-                      padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
-                      child: Text("Visibilidade"),
-                    ),
-                    items: dropdownVisibilityItems,
-                    onSelected: (value) => setState(() => visibility = value),
                   ),
                   InputFormField(
                     onSaved: (value) => observation = value,

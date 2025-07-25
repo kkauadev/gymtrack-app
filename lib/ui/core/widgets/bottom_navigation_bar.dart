@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/routing/routes.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_subscriptions_screen.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({super.key, required this.index});
@@ -14,7 +15,7 @@ class AppBottomNavigationBar extends StatefulWidget {
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   final List<String> _routes = [
     Routes.build(path: "/home"),
-    Routes.build(path: "/training-plan", param: "/1")
+    MySubscriptionsScreen.getPath({"userId": "/1"})
   ];
 
   @override
@@ -46,7 +47,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       iconSize: 24,
       selectedFontSize: 14,
       unselectedFontSize: 12,
-      onTap: (idx) => context.go(_routes[idx]),
+      onTap: (idx) => context.push(_routes[idx]),
     );
   }
 }

@@ -1,5 +1,5 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_command/flutter_command.dart';
 import 'package:gymtrack/data/repositories/day/day_repository.dart';
 import 'package:gymtrack/data/repositories/exercise/exercise_repository.dart';
 import 'package:gymtrack/data/services/api/model/day_api_model.dart';

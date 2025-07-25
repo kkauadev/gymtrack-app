@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/routing/routes.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_subscriptions_screen.dart';
 
 class ScaffoldWithNavbar extends StatefulWidget {
   final String location;
@@ -30,9 +31,8 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
       icon: Icon(Icons.list_outlined, size: 28),
       activeIcon: Icon(Icons.list, size: 30),
       label: 'Treinos',
-      initialLocation: Routes.build(
-        path: "/training-plan",
-        param: "/5505dd52-3d3b-4bf2-ab34-fa17ed6d1398",
+      initialLocation: MySubscriptionsScreen.getPath(
+        {'userId': '741267c1-b189-4711-98e4-6ce15023c405'},
       ),
     ),
     MyCustomBottomNavBarItem(

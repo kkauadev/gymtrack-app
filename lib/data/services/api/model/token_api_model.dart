@@ -4,6 +4,6 @@ class TokenApiModel {
   TokenApiModel({required this.token});
 
   static TokenApiModel fromJson(Map<String, dynamic> json) {
-    return TokenApiModel(token: json['token']);
+    return TokenApiModel(token: json['accessToken']);
   }
 }

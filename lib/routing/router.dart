@@ -1,10 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/data/repositories/auth/auth_repository_remote.dart';
+import 'package:gymtrack/data/repositories/plan_subscription/plan_subscription_repository_remote.dart';
+import 'package:gymtrack/data/repositories/trainingplan/training_plan_repository_remote.dart';
 import 'package:gymtrack/data/repositories/user/user_repository_remote.dart';
 import 'package:gymtrack/data/services/auth_notifier_service.dart';
 import 'package:gymtrack/routing/route/day_route.dart';
 import 'package:gymtrack/routing/route/exercise_route.dart';
-import 'package:gymtrack/routing/route/training_plan_route.dart';
 import 'package:gymtrack/routing/routes.dart';
 import 'package:gymtrack/ui/core/widgets/scaffold_with_navbar.dart';
 import 'package:gymtrack/ui/pages/auth/login/login_viewmodel.dart';
@@ -15,6 +16,17 @@ import 'package:gymtrack/ui/pages/home/home_viewmodel.dart';
 import 'package:gymtrack/ui/pages/home/home_screen.dart';
 import 'package:gymtrack/ui/pages/settings/settings_screen.dart';
 import 'package:gymtrack/ui/pages/settings/settings_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/create/training_plan_create_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/create/training_plans_create_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/create_options/training_plans_create_options_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/list/training_plans_list_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/list/training_plans_list_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/more_info/training_plan_more_info_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/more_info/training_plan_more_info_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_subscriptions_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_subscriptions_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_training_plans/my_training_plans_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_training_plans/my_training_plans_view_model.dart';
 import 'package:provider/provider.dart';
 
 GoRouter router() {
@@ -25,7 +37,6 @@ GoRouter router() {
       final authNotifierService =
           Provider.of<AuthNotifierService>(context, listen: false);
       final isAuthenticated = await authNotifierService.isAuthenticated();
-      if (!isAuthenticated) return '/login';
       if (isAuthenticated && state.uri.path == '/login') return '/home';
 
       return null;
@@ -39,11 +50,9 @@ GoRouter router() {
       ),
       GoRoute(
         path: Routes.build(path: "/signup"),
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: SignupScreen(
-            viewModel: SignupViewmodel(
-              authRepository: Provider.of<AuthRepositoryRemote>(context),
-            ),
+        builder: (context, state) => SignupScreen(
+          viewModel: SignupViewmodel(
+            authRepository: Provider.of<AuthRepositoryRemote>(context),
           ),
         ),
       ),
@@ -57,21 +66,92 @@ GoRouter router() {
         routes: [
           GoRoute(
             path: Routes.build(path: "/home"),
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: HomeScreen(viewModel: HomeViewModel()),
-            ),
+            builder: (context, state) {
+              return HomeScreen(viewModel: HomeViewModel());
+            },
           ),
           GoRoute(
             path: "/settings",
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: SettingsScreen(
+            builder: (context, state) {
+              return SettingsScreen(
                 viewModel: SettingsViewModel(
                   userRepository: Provider.of<UserRepositoryRemote>(context),
                 ),
-              ),
-            ),
+              );
+            },
           ),
-          trainingPlanRoute
+          GoRoute(
+            path: MySubscriptionsScreen.name,
+            builder: (context, state) {
+              return MySubscriptionsScreen(
+                viewModel: MySubscriptionsViewModel(
+                  userId: state.pathParameters['userId']!,
+                  planSubscriptionRepository:
+                      Provider.of<PlanSubscriptionRepositoryRemote>(
+                    context,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      GoRoute(
+        path: TrainingPlansCreateOptionsScreen.name,
+        builder: (context, state) => TrainingPlansCreateOptionsScreen(
+            userId: state.pathParameters['userId']!),
+        routes: [
+          GoRoute(
+            path: TrainingPlansCreateScreen.name,
+            builder: (context, state) {
+              return TrainingPlansCreateScreen(
+                viewModel: TrainingPlanCreateViewModel(
+                  trainingPlanRepository:
+                      Provider.of<TrainingPlanRepositoryRemote>(context),
+                  userId: state.pathParameters['userId']!,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            path: TrainingPlansListScreen.name,
+            builder: (context, state) {
+              return TrainingPlansListScreen(
+                viewModel: TrainingPlansListViewModel(
+                  trainingPlanRepository:
+                      Provider.of<TrainingPlanRepositoryRemote>(context),
+                  userId: state.pathParameters['userId']!,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            path: MyTrainingPlansScreen.name,
+            builder: (context, state) {
+              return MyTrainingPlansScreen(
+                viewModel: MyTrainingPlansViewModel(
+                  trainingPlanRepository:
+                      Provider.of<TrainingPlanRepositoryRemote>(context),
+                  userId: state.pathParameters['userId']!,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            path: TrainingPlanMoreInfoScreen.name,
+            builder: (context, state) {
+              return TrainingPlanMoreInfoScreen(
+                viewModel: TrainingPlanMoreInfoViewModel(
+                  trainingPlanRepository:
+                      Provider.of<TrainingPlanRepositoryRemote>(context),
+                  planSubscriptionRepository:
+                      Provider.of<PlanSubscriptionRepositoryRemote>(context),
+                  userId: state.pathParameters['userId']!,
+                  trainingPlanId: state.pathParameters['trainingPlanId']!,
+                ),
+              );
+            },
+          )
         ],
       ),
       dayRoute,

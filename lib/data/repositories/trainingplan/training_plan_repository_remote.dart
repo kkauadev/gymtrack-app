@@ -12,8 +12,8 @@ class TrainingPlanRepositoryRemote implements TrainingPlanRepository {
   final ApiClient _apiClient;
 
   @override
-  Future<Result<List<TrainingPlan>>> getTrainingPlans(String userId) async {
-    final result = await _apiClient.getTrainingPlans(userId);
+  Future<Result<List<TrainingPlan>>> getTrainingPlans() async {
+    final result = await _apiClient.getTrainingPlans();
 
     return result;
   }
@@ -35,6 +35,15 @@ class TrainingPlanRepositoryRemote implements TrainingPlanRepository {
   @override
   Future<Result> deleteOne(String trainingPlanId) async {
     final result = await _apiClient.deleteOneTrainingPlan(trainingPlanId);
+
+    return result;
+  }
+
+  @override
+  Future<Result<List<TrainingPlan>>> getTrainingPlansByUserId(
+    String userId,
+  ) async {
+    final result = await _apiClient.getTrainingPlansByUserId(userId);
 
     return result;
   }

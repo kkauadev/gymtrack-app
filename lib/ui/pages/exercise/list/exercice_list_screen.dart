@@ -1,5 +1,5 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_command/flutter_command.dart';
 import 'package:gymtrack/ui/core/widgets/default_loading.dart';
 import 'package:gymtrack/ui/pages/exercise/list/exercise_list_view_model.dart';
 import 'package:gymtrack/ui/core/widgets/modal_builder.dart';

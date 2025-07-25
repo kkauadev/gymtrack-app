@@ -1,5 +1,5 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_command/flutter_command.dart';
 import 'package:gymtrack/ui/pages/settings/settings_view_model.dart';
 import 'package:gymtrack/ui/pages/settings/widgets/app_info.dart';
 import 'package:gymtrack/ui/pages/settings/widgets/menu_item.dart';

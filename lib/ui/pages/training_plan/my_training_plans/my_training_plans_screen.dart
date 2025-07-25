@@ -1,14 +1,16 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:gymtrack/routing/routes.dart';
-import 'package:gymtrack/ui/pages/training_plan/list/training_plans_list_view_model.dart';
 import 'package:gymtrack/ui/pages/training_plan/list/components/training_plan_card.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_training_plans/my_training_plans_view_model.dart';
 
-class TrainingPlansListScreen extends StatefulWidget {
-  static const _pathTemplate = '/training-plan/:userId/list';
+class MyTrainingPlansScreen extends StatelessWidget {
+  const MyTrainingPlansScreen({super.key, required this.viewModel});
 
-  static String name = '/list';
+  final MyTrainingPlansViewModel viewModel;
+
+  static const _pathTemplate = '/training-plan/:userId/my-list';
+
+  static String name = '/my-list';
 
   static String getPath(Map<String, String> params) {
     var path = _pathTemplate;
@@ -16,33 +18,21 @@ class TrainingPlansListScreen extends StatefulWidget {
     return path;
   }
 
-  const TrainingPlansListScreen({super.key, required this.viewModel});
-
-  final TrainingPlansListViewModel viewModel;
-
-  @override
-  State<StatefulWidget> createState() => TrainingPlansListScreenState();
-}
-
-class TrainingPlansListScreenState extends State<TrainingPlansListScreen> {
-  Future<Object?> navigateDayList(String param) {
-    return context.push(
-      Routes.build(path: "/day", method: "/$param", param: "/list"),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Meus Planos de Treino"),
+        centerTitle: true,
+      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
           child: Column(
             children: [
               Expanded(
                 child: CommandBuilder(
-                  command: widget.viewModel.load,
+                  command: viewModel.load,
                   onData: (context, data, param) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ListView.separated(
@@ -50,7 +40,7 @@ class TrainingPlansListScreenState extends State<TrainingPlansListScreen> {
                       itemCount: data.length,
                       itemBuilder: (context, index) => TrainingPlanCard(
                         trainingPlan: data[index],
-                        userId: widget.viewModel.userId,
+                        userId: viewModel.userId,
                       ),
                     ),
                   ),

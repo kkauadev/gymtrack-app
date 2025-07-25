@@ -1,5 +1,5 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_command/flutter_command.dart';
 import 'package:gymtrack/data/repositories/auth/auth_repository.dart';
 import 'package:gymtrack/data/services/api/model/signup_request_model.dart';
 

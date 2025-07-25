@@ -10,6 +10,7 @@ import 'package:gymtrack/domain/exceptions/exception.dart';
 import 'package:gymtrack/domain/models/day.dart';
 import 'package:gymtrack/domain/models/exercise.dart';
 import 'package:gymtrack/domain/models/id.dart';
+import 'package:gymtrack/domain/models/plan_subscription.dart';
 import 'package:gymtrack/domain/models/training_plan.dart';
 import 'package:gymtrack/domain/models/user.dart';
 import 'package:result_dart/result_dart.dart';
@@ -46,21 +47,56 @@ class ApiClient {
     });
   }
 
-  Future<Result<List<TrainingPlan>>> getTrainingPlans(String userId) async {
+  Future<Result<List<TrainingPlan>>> getTrainingPlans() async {
+    return makeRequest<List<TrainingPlan>>((client) async {
+      final request = await client.get(_host, _port, '/training-plan/list');
+      final response = await request.close();
+      if (response.statusCode == 200) {
+        final stringData = await response.transform(utf8.decoder).join();
+        return Success((jsonDecode(stringData) as List).map((element) {
+          return TrainingPlan.fromJson(element);
+        }).toList());
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
+  Future<Result<List<TrainingPlan>>> getTrainingPlansByUserId(
+      String userId) async {
     return makeRequest<List<TrainingPlan>>((client) async {
       final request =
           await client.get(_host, _port, '/training-plan/list/$userId');
       final response = await request.close();
       if (response.statusCode == 200) {
         final stringData = await response.transform(utf8.decoder).join();
-        final json = jsonDecode(stringData) as List<dynamic>;
-        return Success(
-          json.map((element) => TrainingPlan.fromJson(element)).toList(),
-        );
+        return Success((jsonDecode(stringData) as List).map((element) {
+          return TrainingPlan.fromJson(element);
+        }).toList());
       } else {
         return Failure(HttpException("Invalid response"));
       }
     });
+  }
+
+  Future<Result<bool>> existsPlanSubscription(
+    String trainingPlanId,
+    String userId,
+  ) {
+    return makeRequest<bool>(
+      (client) async {
+        final request = await client.get(_host, _port,
+            '/training-plan/subscription/exists/$trainingPlanId/$userId');
+        final response = await request.close();
+        if (response.statusCode == 200) {
+          final stringData = await response.transform(utf8.decoder).join();
+          return Success(
+              jsonDecode(stringData)['exists'] == true ? false : true);
+        } else {
+          return Failure(HttpException("Invalid response"));
+        }
+      },
+    );
   }
 
   Future<Result<List<Exercise>>> getExercises(String dayId) async {
@@ -293,19 +329,78 @@ class ApiClient {
     });
   }
 
+  Future<Result<List<PlanSubscription>>> getPlanSubscriptions(
+      String userId) async {
+    return makeRequest<List<PlanSubscription>>((client) async {
+      final req = await client.get(
+          _host, _port, 'training-plan/subscription/list/$userId');
+
+      final res = await req.close();
+      if (res.statusCode == 200) {
+        final stringData = await res.transform(utf8.decoder).join();
+        final json = jsonDecode(stringData) as List<dynamic>;
+        return Success(json.map((p) => PlanSubscription.fromJson(p)).toList());
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
+  Future<Result> createSubscription(String trainingPlanId, String userId) {
+    return makeRequest((client) async {
+      final req = await client.post(
+        _host,
+        _port,
+        '/training-plan/subscription/$trainingPlanId/$userId',
+      );
+
+      final res = await req.close();
+      if (res.statusCode == 201) {
+        return Success(Unit);
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
+  Future<Result> createPlanDayProgress(
+      String planSubscriptionId, String userId) {
+    return makeRequest((client) async {
+      final req = await client.post(
+        _host,
+        _port,
+        '/training-plan/subscription/add/day/progress/$planSubscriptionId/$userId',
+      );
+
+      final res = await req.close();
+      if (res.statusCode == 201) {
+        return Success(Unit);
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
   Future<Result<T>> makeRequest<T extends Object>(
       Future<Result<T>> Function(HttpClient client) func) async {
     final client = _clientFactory();
 
     try {
       return await func(client);
-    } on SocketException {
+    } on SocketException catch (e) {
+      print(e);
+
       return Failure(NetworkException());
-    } on FormatException {
+    } on FormatException catch (e) {
+      print(e);
       return Failure(FormatException());
-    } on TimeoutException {
+    } on TimeoutException catch (e) {
+      print(e);
+
       return Failure(TimeoutException("Tempo limite de conexão excedido."));
     } catch (e) {
+      print(e);
+
       return Failure(Exception(e));
     } finally {
       client.close();

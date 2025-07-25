@@ -21,6 +21,7 @@ class AuthNotifierService extends ChangeNotifier {
 
   Future<bool> isAuthenticated() async {
     final prefs = await SharedPreferences.getInstance();
+
     _token = prefs.getString(_tokenKey);
     return _token != null && _token!.isNotEmpty;
   }
