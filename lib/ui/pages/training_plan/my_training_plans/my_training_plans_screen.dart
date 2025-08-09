@@ -8,13 +8,12 @@ class MyTrainingPlansScreen extends StatelessWidget {
 
   final MyTrainingPlansViewModel viewModel;
 
-  static const _pathTemplate = '/training-plan/:userId/my-list';
+  static const _pathTemplate = '/training-plan/my-list';
 
   static String name = '/my-list';
 
-  static String getPath(Map<String, String> params) {
+  static String getPath() {
     var path = _pathTemplate;
-    params.forEach((key, value) => path = path.replaceAll(':$key', value));
     return path;
   }
 
@@ -40,7 +39,6 @@ class MyTrainingPlansScreen extends StatelessWidget {
                       itemCount: data.length,
                       itemBuilder: (context, index) => TrainingPlanCard(
                         trainingPlan: data[index],
-                        userId: viewModel.userId,
                       ),
                     ),
                   ),

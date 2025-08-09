@@ -9,6 +9,14 @@ import 'package:gymtrack/ui/pages/settings/settings_view_model.dart';
 class SettingsProfileScreen extends StatefulWidget {
   const SettingsProfileScreen({super.key, required this.viewModel});
 
+  static const _pathTemplate = '/settings/profile';
+  static String name = '/profile';
+
+  static String getPath() {
+    var path = _pathTemplate;
+    return path;
+  }
+
   final SettingsViewModel viewModel;
 
   @override

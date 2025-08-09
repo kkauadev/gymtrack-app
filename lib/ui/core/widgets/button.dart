@@ -5,6 +5,7 @@ class Button extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
+    this.width,
     this.icon,
     this.backgroundColor,
     this.foregroundColor,
@@ -14,8 +15,9 @@ class Button extends StatelessWidget {
   });
 
   final String label;
-  final TextStyle? labelStyle;
   final VoidCallback onPressed;
+  final TextStyle? labelStyle;
+  final double? width;
   final Icon? icon;
   final Color? backgroundColor;
   final Color? foregroundColor;
@@ -25,7 +27,7 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: double.infinity,
+        width: width ?? double.infinity,
         child: icon != null
             ? ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(

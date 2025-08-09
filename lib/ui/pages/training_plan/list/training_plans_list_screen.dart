@@ -6,13 +6,12 @@ import 'package:gymtrack/ui/pages/training_plan/list/training_plans_list_view_mo
 import 'package:gymtrack/ui/pages/training_plan/list/components/training_plan_card.dart';
 
 class TrainingPlansListScreen extends StatefulWidget {
-  static const _pathTemplate = '/training-plan/:userId/list';
+  static const _pathTemplate = '/training-plan/list';
 
   static String name = '/list';
 
-  static String getPath(Map<String, String> params) {
+  static String getPath() {
     var path = _pathTemplate;
-    params.forEach((key, value) => path = path.replaceAll(':$key', value));
     return path;
   }
 
@@ -50,7 +49,6 @@ class TrainingPlansListScreenState extends State<TrainingPlansListScreen> {
                       itemCount: data.length,
                       itemBuilder: (context, index) => TrainingPlanCard(
                         trainingPlan: data[index],
-                        userId: widget.viewModel.userId,
                       ),
                     ),
                   ),

@@ -37,4 +37,19 @@ class PlanSubscriptionRepositoryRemote implements PlanSubscriptionRepository {
     var result = _apiClient.createPlanDayProgress(planSubscriptionId, userId);
     return result;
   }
+
+  @override
+  Future<Result<bool>> existsInProgress(String trainingPlanId, String userId) {
+    var result =
+        _apiClient.existsPlanSubscriptionInProgress(trainingPlanId, userId);
+    return result;
+  }
+
+  @override
+  Future<Result<Object>> sendToInProgress(
+      String trainingPlanId, String userId) {
+    var result =
+        _apiClient.sendPlanSubscriptionToInProgress(trainingPlanId, userId);
+    return result;
+  }
 }

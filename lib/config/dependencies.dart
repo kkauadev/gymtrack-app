@@ -10,10 +10,6 @@ import 'package:gymtrack/data/services/auth_notifier_service.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-//List<SingleChildWidget> _sharedProviders = [
-//Provider(lazy: true,create: () => UseCase,)
-//];
-
 List<SingleChildWidget> get providersRemote {
   return [
     ChangeNotifierProvider(create: (context) => AuthNotifierService()),

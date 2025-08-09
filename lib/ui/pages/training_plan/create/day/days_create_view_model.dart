@@ -5,16 +5,21 @@ import 'package:gymtrack/domain/models/day.dart';
 
 class DaysCreateViewModel extends ChangeNotifier {
   final DayRepository _dayRepository;
+  final String trainingPlanId;
 
-  DaysCreateViewModel(DayRepository dayRepository)
-      : _dayRepository = dayRepository {
-    create = Command.createAsyncNoResult(_create);
+  DaysCreateViewModel({
+    required DayRepository dayRepository,
+    required this.trainingPlanId,
+  }) : _dayRepository = dayRepository {
+    createDays = Command.createAsyncNoResult(_createDays);
   }
 
-  late Command<Day, void> create;
+  late Command<List<Day>, void> createDays;
 
-  Future<void> _create(Day obj) async {
-    final result = await _dayRepository.saveDay(obj);
+  Future<void> _createDays(List<Day> objs) async {
+    if (objs.isEmpty) return;
+
+    final result = await _dayRepository.saveDays(objs);
 
     if (result.isError()) throw Exception();
   }

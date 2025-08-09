@@ -1,21 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymtrack/data/repositories/auth/auth_repository_remote.dart';
+import 'package:gymtrack/data/repositories/day/day_repository_remote.dart';
 import 'package:gymtrack/data/repositories/plan_subscription/plan_subscription_repository_remote.dart';
 import 'package:gymtrack/data/repositories/trainingplan/training_plan_repository_remote.dart';
 import 'package:gymtrack/data/repositories/user/user_repository_remote.dart';
 import 'package:gymtrack/data/services/auth_notifier_service.dart';
-import 'package:gymtrack/routing/route/day_route.dart';
 import 'package:gymtrack/routing/route/exercise_route.dart';
 import 'package:gymtrack/routing/routes.dart';
-import 'package:gymtrack/ui/core/widgets/scaffold_with_navbar.dart';
 import 'package:gymtrack/ui/pages/auth/login/login_viewmodel.dart';
 import 'package:gymtrack/ui/pages/auth/login/login_screen.dart';
 import 'package:gymtrack/ui/pages/auth/signup/signup_viewmodel.dart';
 import 'package:gymtrack/ui/pages/auth/signup/signup_screen.dart';
-import 'package:gymtrack/ui/pages/home/home_viewmodel.dart';
-import 'package:gymtrack/ui/pages/home/home_screen.dart';
+import 'package:gymtrack/ui/pages/settings/profile/settings_profile_screen.dart';
 import 'package:gymtrack/ui/pages/settings/settings_screen.dart';
 import 'package:gymtrack/ui/pages/settings/settings_view_model.dart';
+import 'package:gymtrack/ui/pages/training_plan/create/day/days_create_screen.dart';
+import 'package:gymtrack/ui/pages/training_plan/create/day/days_create_view_model.dart';
 import 'package:gymtrack/ui/pages/training_plan/create/training_plan_create_view_model.dart';
 import 'package:gymtrack/ui/pages/training_plan/create/training_plans_create_screen.dart';
 import 'package:gymtrack/ui/pages/training_plan/create_options/training_plans_create_options_screen.dart';
@@ -37,7 +38,12 @@ GoRouter router() {
       final authNotifierService =
           Provider.of<AuthNotifierService>(context, listen: false);
       final isAuthenticated = await authNotifierService.isAuthenticated();
-      if (isAuthenticated && state.uri.path == '/login') return '/home';
+      if (isAuthenticated && state.uri.path == '/login') {
+        final userId = await authNotifierService.getUserId();
+        if (userId == null) return null;
+
+        return MySubscriptionsScreen.getPath();
+      }
 
       return null;
     },
@@ -45,8 +51,11 @@ GoRouter router() {
       GoRoute(
         path: Routes.build(path: "/login"),
         builder: (context, state) => LoginScreen(
-            viewModel:
-                LoginViewModel(Provider.of<AuthRepositoryRemote>(context))),
+          viewModel: LoginViewModel(
+            Provider.of<AuthRepositoryRemote>(context),
+            Provider.of<AuthNotifierService>(context),
+          ),
+        ),
       ),
       GoRoute(
         path: Routes.build(path: "/signup"),
@@ -57,25 +66,54 @@ GoRouter router() {
         ),
       ),
       ShellRoute(
-        pageBuilder: (context, state, child) => NoTransitionPage(
-          child: ScaffoldWithNavbar(
-            location: Routes.build(path: "/home"),
-            child: child,
-          ),
-        ),
+        builder: (context, state, child) {
+          final currentPath = state.uri.path;
+
+          final tabs = <String>[
+            MySubscriptionsScreen.getPath(),
+            SettingsScreen.getPath()
+          ];
+
+          var currentIndex = tabs.indexOf(currentPath);
+          if (currentIndex < 0) currentIndex = 0;
+
+          return Scaffold(
+            body: child,
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: currentIndex,
+              onTap: (i) {
+                switch (i) {
+                  case 0:
+                    context.go(MySubscriptionsScreen.getPath());
+                    break;
+                  case 1:
+                    context.go(SettingsScreen.getPath());
+                    break;
+                }
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.fitness_center),
+                  label: 'Planos',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: 'Ajustes',
+                ),
+              ],
+            ),
+          );
+        },
         routes: [
           GoRoute(
-            path: Routes.build(path: "/home"),
+            path: MySubscriptionsScreen.name,
             builder: (context, state) {
-              return HomeScreen(viewModel: HomeViewModel());
-            },
-          ),
-          GoRoute(
-            path: "/settings",
-            builder: (context, state) {
-              return SettingsScreen(
-                viewModel: SettingsViewModel(
-                  userRepository: Provider.of<UserRepositoryRemote>(context),
+              return MySubscriptionsScreen(
+                viewModel: MySubscriptionsViewModel(
+                  planSubscriptionRepository:
+                      Provider.of<PlanSubscriptionRepositoryRemote>(
+                    context,
+                  ),
                   authNotifierService:
                       Provider.of<AuthNotifierService>(context),
                 ),
@@ -83,34 +121,46 @@ GoRouter router() {
             },
           ),
           GoRoute(
-            path: MySubscriptionsScreen.name,
-            builder: (context, state) {
-              return MySubscriptionsScreen(
-                viewModel: MySubscriptionsViewModel(
-                  userId: state.pathParameters['userId']!,
-                  planSubscriptionRepository:
-                      Provider.of<PlanSubscriptionRepositoryRemote>(
-                    context,
+              path: SettingsScreen.name,
+              builder: (context, state) {
+                return SettingsScreen(
+                  viewModel: SettingsViewModel(
+                    userRepository: Provider.of<UserRepositoryRemote>(context),
+                    authNotifierService:
+                        Provider.of<AuthNotifierService>(context),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+              routes: [
+                GoRoute(
+                  path: SettingsProfileScreen.name,
+                  builder: (context, state) {
+                    return SettingsProfileScreen(
+                      viewModel: SettingsViewModel(
+                        userRepository:
+                            Provider.of<UserRepositoryRemote>(context),
+                        authNotifierService:
+                            Provider.of<AuthNotifierService>(context),
+                      ),
+                    );
+                  },
+                )
+              ]),
         ],
       ),
       GoRoute(
         path: TrainingPlansCreateOptionsScreen.name,
-        builder: (context, state) => TrainingPlansCreateOptionsScreen(
-            userId: state.pathParameters['userId']!),
+        builder: (context, state) => TrainingPlansCreateOptionsScreen(),
         routes: [
           GoRoute(
             path: TrainingPlansCreateScreen.name,
             builder: (context, state) {
               return TrainingPlansCreateScreen(
                 viewModel: TrainingPlanCreateViewModel(
+                  authNotifierService:
+                      Provider.of<AuthNotifierService>(context),
                   trainingPlanRepository:
                       Provider.of<TrainingPlanRepositoryRemote>(context),
-                  userId: state.pathParameters['userId']!,
                 ),
               );
             },
@@ -122,7 +172,6 @@ GoRouter router() {
                 viewModel: TrainingPlansListViewModel(
                   trainingPlanRepository:
                       Provider.of<TrainingPlanRepositoryRemote>(context),
-                  userId: state.pathParameters['userId']!,
                 ),
               );
             },
@@ -134,7 +183,8 @@ GoRouter router() {
                 viewModel: MyTrainingPlansViewModel(
                   trainingPlanRepository:
                       Provider.of<TrainingPlanRepositoryRemote>(context),
-                  userId: state.pathParameters['userId']!,
+                  authNotifierService:
+                      Provider.of<AuthNotifierService>(context),
                 ),
               );
             },
@@ -144,11 +194,23 @@ GoRouter router() {
             builder: (context, state) {
               return TrainingPlanMoreInfoScreen(
                 viewModel: TrainingPlanMoreInfoViewModel(
+                  authNotifierService:
+                      Provider.of<AuthNotifierService>(context),
                   trainingPlanRepository:
                       Provider.of<TrainingPlanRepositoryRemote>(context),
                   planSubscriptionRepository:
                       Provider.of<PlanSubscriptionRepositoryRemote>(context),
-                  userId: state.pathParameters['userId']!,
+                  trainingPlanId: state.pathParameters['trainingPlanId']!,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            path: DaysCreateScreen.name,
+            builder: (context, state) {
+              return DaysCreateScreen(
+                viewModel: DaysCreateViewModel(
+                  dayRepository: Provider.of<DayRepositoryRemote>(context),
                   trainingPlanId: state.pathParameters['trainingPlanId']!,
                 ),
               );
@@ -156,24 +218,7 @@ GoRouter router() {
           )
         ],
       ),
-      dayRoute,
       exerciseRoute,
     ],
   );
 }
-
-//Future<String?> _redirect(BuildContext context, GoRouterState state) async {
-  // if the user is not logged in, they need to login
-  //const bool loggedIn = true;
-  //final bool loggingIn = state.matchedLocation == Routes.login;
-  //if (!loggedIn) {
-  //return Routes.login;
-  //}
-
-  // if the user is logged in but still on the login page, send them to
-  // the home page
-  //if (loggingIn) return Routes.login;
-
-  // no need to redirect at all
-  //return null;
-//}

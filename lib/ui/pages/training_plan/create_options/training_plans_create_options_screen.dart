@@ -6,28 +6,26 @@ import 'package:gymtrack/ui/pages/training_plan/my_subscriptions_screen.dart';
 import 'package:gymtrack/ui/pages/training_plan/my_training_plans/my_training_plans_screen.dart';
 
 class TrainingPlansCreateOptionsScreen extends StatelessWidget {
-  static const _pathTemplate = '/training-plan/:userId';
+  static const _pathTemplate = '/training-plan';
 
-  static String name = '/training-plan/:userId';
+  static String name = '/training-plan';
 
-  static String getPath(Map<String, String> params) {
+  static String getPath() {
     var path = _pathTemplate;
-    params.forEach((key, value) => path = path.replaceAll(':$key', value));
     return path;
   }
 
-  final String userId;
-
-  const TrainingPlansCreateOptionsScreen({super.key, required this.userId});
+  const TrainingPlansCreateOptionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () =>
-              context.push(MySubscriptionsScreen.getPath({'userId': userId})),
-        ),
+        leading: BackButton(onPressed: () {
+          if (context.canPop()) return context.pop();
+
+          return context.go(MySubscriptionsScreen.getPath());
+        }),
       ),
       body: SafeArea(
         child: Container(
@@ -37,8 +35,8 @@ class TrainingPlansCreateOptionsScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => context.push(
-                      TrainingPlansCreateScreen.getPath({'userId': userId})),
+                  onTap: () =>
+                      context.push(TrainingPlansCreateScreen.getPath()),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -66,8 +64,7 @@ class TrainingPlansCreateOptionsScreen extends StatelessWidget {
               ),
               Expanded(
                 child: GestureDetector(
-                  onTap: () => context.push(
-                      TrainingPlansListScreen.getPath({'userId': userId})),
+                  onTap: () => context.push(TrainingPlansListScreen.getPath()),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -95,8 +92,7 @@ class TrainingPlansCreateOptionsScreen extends StatelessWidget {
               ),
               Expanded(
                 child: GestureDetector(
-                  onTap: () => context
-                      .push(MyTrainingPlansScreen.getPath({'userId': userId})),
+                  onTap: () => context.push(MyTrainingPlansScreen.getPath()),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(

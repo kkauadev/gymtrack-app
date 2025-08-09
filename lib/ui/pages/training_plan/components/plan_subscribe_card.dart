@@ -41,7 +41,6 @@ class PlanSubscribeCard extends StatelessWidget {
 
     Future onTap() async {
       await context.push(TrainingPlanMoreInfoScreen.getPath({
-        'userId': data.userId!,
         'trainingPlanId': data.trainingPlan.id,
       }));
     }
@@ -125,10 +124,7 @@ class PlanSubscribeCard extends StatelessWidget {
                               child: FittedBox(
                                 child: Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                  ),
+                                  child: Icon(Icons.check, color: Colors.white),
                                 ),
                               ),
                             ),
@@ -138,10 +134,7 @@ class PlanSubscribeCard extends StatelessWidget {
                     }),
                   ),
                   !hasProgressToday
-                      ? Button(
-                          label: "Iniciar treino",
-                          onPressed: onTapInitDay,
-                        )
+                      ? Button(label: "Iniciar treino", onPressed: onTapInitDay)
                       : SizedBox()
                 ],
               )

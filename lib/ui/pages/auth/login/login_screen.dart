@@ -8,6 +8,7 @@ import 'package:gymtrack/ui/core/widgets/default_loading.dart';
 import 'package:gymtrack/ui/pages/auth/login/login_viewmodel.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/input.dart';
+import 'package:gymtrack/ui/pages/training_plan/my_subscriptions_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.viewModel});
@@ -26,7 +27,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     widget.viewModel.login.listen((token, _) {
-      if (token != null) context.go(Routes.build(path: "/home"));
+      if (token != null) {
+        context.go(MySubscriptionsScreen.getPath());
+      }
     });
 
     super.initState();
@@ -40,19 +43,51 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _onLogin() {
+  Future _onLogin(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       String username = _usernameController.text;
       String password = _passwordController.text;
 
-      widget.viewModel.login.execute(LoginRequestModel(
+      var userId =
+          await widget.viewModel.login.executeWithFuture(LoginRequestModel(
         username: username,
         password: password,
       ));
+      if (userId == null) return;
+
       widget.viewModel.login.notifyListeners();
+      if (context.mounted) {
+        context.go(MySubscriptionsScreen.getPath());
+      }
     } else {
       debugPrint("Formulário inválido");
     }
+  }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Insira um email valido";
+    }
+
+    if (!RegExp(r"^[\w\.-]+@[\w\.-]+\.\w{2,}$").hasMatch(value)) {
+      return "Insira um email valido";
+    }
+
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Insira uma senha valida";
+    }
+
+    final passwordRegex =
+        RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$');
+    if (!passwordRegex.hasMatch(value)) {
+      return "A senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e símbolo.";
+    }
+
+    return null;
   }
 
   @override
@@ -74,10 +109,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 200,
                       color: Theme.of(context).colorScheme.onSecondary,
                     ),
-                    Input(hintText: "Email", controller: _usernameController),
+                    Input(
+                      hintText: "Email",
+                      controller: _usernameController,
+                      validator: validateEmail,
+                    ),
                     PasswordInput(
                       hintText: "Senha",
                       controller: _passwordController,
+                      validator: validatePassword,
                     ),
                     ValueListenableBuilder(
                       valueListenable: widget.viewModel.login.errors,
@@ -98,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return Button(
                           label: "Entrar",
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          onPressed: _onLogin,
+                          onPressed: () => _onLogin(context),
                           labelStyle:
                               Theme.of(context).primaryTextTheme.titleMedium,
                         );

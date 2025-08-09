@@ -58,7 +58,11 @@ class AuthApiClient {
       return await func(client);
     } on SocketException catch (e) {
       print(e);
-      return Failure(NetworkException());
+      return Failure(
+        NetworkException(
+          "Ocorreu um erro ao efetuar essa acao, tente novamente",
+        ),
+      );
     } on FormatException catch (e) {
       print(e);
 

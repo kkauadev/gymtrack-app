@@ -87,6 +87,8 @@ InputDecoration defaultDecoration(
       borderRadius: BorderRadius.circular(12),
       borderSide: const BorderSide(color: Colors.blue, width: 2),
     ),
+    errorMaxLines: 2,
+    errorStyle: TextStyle(overflow: TextOverflow.visible),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: const BorderSide(color: Colors.red, width: 2),
@@ -138,6 +140,7 @@ class _PasswordInputState extends State<PasswordInput> {
         counterText: "",
         filled: true,
         fillColor: colorScheme.inputPrimaryColor,
+        errorMaxLines: 2,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

@@ -5,6 +5,8 @@ abstract class PlanSubscriptionRepository {
   Future<Result<List<PlanSubscription>>> list(String userId);
   Future<Result> createSubscription(String trainingPlanId, String userId);
   Future<Result<bool>> exists(String trainingPlanId, String userId);
+  Future<Result<bool>> existsInProgress(String trainingPlanId, String userId);
+  Future<Result> sendToInProgress(String trainingPlanId, String userId);
   Future<Result> createPlanDayProgress(
       String planSubscriptionId, String userId);
 }

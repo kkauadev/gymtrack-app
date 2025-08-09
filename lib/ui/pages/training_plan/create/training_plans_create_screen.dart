@@ -5,17 +5,16 @@ import 'package:gymtrack/domain/models/training_plan.dart';
 import 'package:gymtrack/ui/core/widgets/button.dart';
 import 'package:gymtrack/ui/core/widgets/dropdown.dart';
 import 'package:gymtrack/ui/core/widgets/text_form_field.dart';
+import 'package:gymtrack/ui/pages/training_plan/create/day/days_create_screen.dart';
 import 'package:gymtrack/ui/pages/training_plan/create/training_plan_create_view_model.dart';
-import 'package:gymtrack/ui/pages/training_plan/my_training_plans/my_training_plans_screen.dart';
 
 class TrainingPlansCreateScreen extends StatefulWidget {
-  static const _pathTemplate = '/training-plan/:userId/create';
+  static const _pathTemplate = '/training-plan/create';
 
   static String name = '/create';
 
-  static String getPath(Map<String, String> params) {
+  static String getPath() {
     var path = _pathTemplate;
-    params.forEach((key, value) => path = path.replaceAll(':$key', value));
     return path;
   }
 
@@ -63,71 +62,36 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void onSubmit() {
+    Future onSubmit() async {
       if (formKey.currentState?.validate() ?? false) {
         formKey.currentState?.save.call();
-        widget.viewModel.saveTrainingPlan.execute(
-          TrainingPlan(
-            name: name?.trim() ?? "",
-            pathology: pathologies?.trim() ?? "",
-            authorId: widget.viewModel.userId,
-            timeInDays: timeInDays ?? 0,
-            observation: observation?.trim() ?? "",
-            level: parseLevel(nivel),
-            type: parseType(type),
-            visibility: TrainingPlanVisibility.private,
-          ),
-        );
+        try {
+          final userId = await widget.viewModel.getUserId.executeWithFuture();
+          final trainingPlanId =
+              await widget.viewModel.saveTrainingPlan.executeWithFuture(
+            TrainingPlan(
+              name: name?.trim() ?? "",
+              pathology: pathologies?.trim() ?? "",
+              authorId: userId,
+              timeInDays: timeInDays ?? 0,
+              observation: observation?.trim() ?? "",
+              level: parseLevel(nivel),
+              type: parseType(type),
+              visibility: TrainingPlanVisibility.private,
+            ),
+          );
+          if (context.mounted && trainingPlanId != null) {
+            context.push(DaysCreateScreen.getPath(
+                {'trainingPlanId': trainingPlanId.value}));
+          }
+        } catch (e) {
+          return;
+        }
       }
     }
 
-    var textStyle = Theme.of(context)
-        .textTheme
-        .headlineSmall
-        ?.copyWith(fontWeight: FontWeight.bold);
-
-    showSuccessDialog() {
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text(
-                  "O seu plano de treino foi criado com sucesso.",
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Button(
-                  label: "Continuar",
-                  onPressed: () async {
-                    await context.push(MyTrainingPlansScreen.getPath(
-                      {'userId': widget.viewModel.userId},
-                    ));
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Plano de Treino"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text("Plano de Treino"), centerTitle: true),
       body: SafeArea(
         child: SingleChildScrollView(
           reverse: true,
@@ -143,7 +107,7 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                     validator: TrainingPlansCreateValidator.name,
                     label: Padding(
                       padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
-                      child: Text("Nome"),
+                      child: const Text("Nome"),
                     ),
                   ),
                   InputFormField(
@@ -151,13 +115,13 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                     validator: TrainingPlansCreateValidator.pathologies,
                     label: Padding(
                       padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
-                      child: Text("Patologias"),
+                      child: const Text("Patologias"),
                     ),
                   ),
                   Dropdown(
                     label: Padding(
                       padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
-                      child: Text("Tipo"),
+                      child: const Text("Tipo"),
                     ),
                     items: dropdownTypeItems,
                     onSelected: (value) => setState(() => type = value),
@@ -167,13 +131,13 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                     validator: TrainingPlansCreateValidator.observation,
                     label: Padding(
                       padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
-                      child: Text("Observacoes"),
+                      child: const Text("Observacoes"),
                     ),
                   ),
                   Dropdown(
                     label: Padding(
                       padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
-                      child: Text("Nivel"),
+                      child: const Text("Nivel"),
                     ),
                     items: dropdownLevelItems,
                     onSelected: (value) => setState(() => nivel = value),
@@ -183,16 +147,19 @@ class TrainingPlansCreateScreenState extends State<TrainingPlansCreateScreen> {
                     validator: TrainingPlansCreateValidator.timeInDays,
                     label: Padding(
                       padding: EdgeInsets.fromLTRB(8, 0, 0, 4),
-                      child: Text("Dias por semana de treino"),
+                      child: const Text("Dias por semana de treino"),
                     ),
                   ),
                   SizedBox(height: 12),
                   Button(label: "Criar", onPressed: onSubmit),
                   CommandBuilder(
                     command: widget.viewModel.saveTrainingPlan,
-                    onData: (ctx, retur, obj) {
-                      Future.microtask(showSuccessDialog);
-                      return SizedBox.shrink();
+                    onSuccess: (context, param) => SizedBox(),
+                    onError: (context, p1, lastValue, p3) {
+                      return Text(
+                        "Erro ao criar o plano de treino",
+                        style: TextStyle(color: Colors.red),
+                      );
                     },
                   )
                 ],

@@ -29,10 +29,6 @@ class ExerciseInfoCard extends StatefulWidget {
 }
 
 class ExerciseInfoCardState extends State<ExerciseInfoCard> {
-  //_onTapEdit() {
-  //  widget.onTapEdit();
-  //}
-
   _onTapDelete() {
     widget.onTapDelete();
   }
@@ -88,14 +84,6 @@ class ExerciseInfoCardState extends State<ExerciseInfoCard> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 spacing: 8,
                 children: [
-                  //GestureDetector(
-                  //  onTap: _onTapEdit,
-                  //  child: Icon(
-                  //    Icons.edit,
-                  //    size: 36,
-                  //    color: Theme.of(context).colorScheme.onPrimary,
-                  //  ),
-                  //),
                   GestureDetector(
                     onTap: _onTapDelete,
                     child: Icon(

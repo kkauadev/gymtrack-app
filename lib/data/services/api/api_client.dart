@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:gymtrack/data/services/api/model/day_api_model.dart';
 import 'package:gymtrack/data/services/api/model/day_update_name.dart';
 import 'package:gymtrack/data/services/api/model/exercise_with_day_api_mode.dart';
 import 'package:gymtrack/data/services/auth_notifier_service.dart';
@@ -231,6 +230,30 @@ class ApiClient {
     });
   }
 
+  Future<Result> saveDays(List<Day> objs) async {
+    return makeRequest((client) async {
+      var request = await client.post(_host, _port, '/day/list');
+      request.headers.set(
+        HttpHeaders.contentTypeHeader,
+        'application/json; charset=utf-8',
+      );
+      request.headers.set(
+        HttpHeaders.acceptHeader,
+        'application/json; charset=utf-8',
+      );
+      request.add(utf8.encode(
+          jsonEncode(objs.map((day) => day.toJsonWithExercises()).toList())));
+
+      var response = await request.close();
+
+      if (response.statusCode == 201) {
+        return Success(Unit);
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
   Future<Result> deleteOneTrainingPlan(String trainingPlanId) async {
     return makeRequest((client) async {
       final req =
@@ -262,38 +285,6 @@ class ApiClient {
       return res.statusCode == 200
           ? Success.unit()
           : Failure(HttpException("Invalid response"));
-    });
-  }
-
-  Future<Result<List<DayApiModel>>> getRecursiveDay(
-      String trainingPlanId) async {
-    return makeRequest<List<DayApiModel>>((client) async {
-      final request = await client.get(
-          _host, _port, '/day/list/recursivaly/$trainingPlanId');
-      final response = await request.close();
-      if (response.statusCode == 200) {
-        final stringData = await response.transform(utf8.decoder).join();
-        final json = jsonDecode(stringData) as List<dynamic>;
-        return Success(
-          json.map((element) => DayApiModel.fromJson(element)).toList(),
-        );
-      } else {
-        return Failure(HttpException("Invalid response"));
-      }
-    });
-  }
-
-  Future<Result<DayApiModel>> getOneRecursiveDay(String dayId) async {
-    return makeRequest<DayApiModel>((client) async {
-      final request = await client.get(_host, _port, '/day/recursivaly/$dayId');
-      final response = await request.close();
-      if (response.statusCode == 200) {
-        final stringData = await response.transform(utf8.decoder).join();
-        final json = jsonDecode(stringData);
-        return Success(DayApiModel.fromJson(json));
-      } else {
-        return Failure(HttpException("Invalid response"));
-      }
     });
   }
 
@@ -374,6 +365,43 @@ class ApiClient {
 
       final res = await req.close();
       if (res.statusCode == 201) {
+        return Success(Unit);
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
+  Future<Result<bool>> existsPlanSubscriptionInProgress(
+      String trainingPlanId, String userId) {
+    return makeRequest((client) async {
+      final req = await client.get(
+        _host,
+        _port,
+        '/training-plan/subscription/exists/in-progress/$trainingPlanId/$userId',
+      );
+
+      final res = await req.close();
+      if (res.statusCode == 200) {
+        final stringData = await res.transform(utf8.decoder).join();
+        return Success(jsonDecode(stringData)['exists'] == true ? false : true);
+      } else {
+        return Failure(HttpException("Invalid response"));
+      }
+    });
+  }
+
+  Future<Result> sendPlanSubscriptionToInProgress(
+      String trainingPlanId, String userId) {
+    return makeRequest((client) async {
+      final req = await client.put(
+        _host,
+        _port,
+        '/training-plan/subscription/send/in-progress/$trainingPlanId/$userId',
+      );
+
+      final res = await req.close();
+      if (res.statusCode == 200) {
         return Success(Unit);
       } else {
         return Failure(HttpException("Invalid response"));

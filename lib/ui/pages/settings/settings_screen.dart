@@ -1,6 +1,7 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymtrack/ui/pages/settings/profile/settings_profile_screen.dart';
 import 'package:gymtrack/ui/pages/settings/settings_view_model.dart';
 import 'package:gymtrack/ui/pages/settings/widgets/app_info.dart';
 import 'package:gymtrack/ui/pages/settings/widgets/menu_item.dart';
@@ -8,6 +9,14 @@ import 'package:gymtrack/ui/pages/settings/widgets/user_profile_card.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.viewModel});
+
+  static const _pathTemplate = '/settings';
+  static String name = '/settings';
+
+  static String getPath() {
+    var path = _pathTemplate;
+    return path;
+  }
 
   final SettingsViewModel viewModel;
 
@@ -21,7 +30,7 @@ class SettingScreenState extends State<SettingsScreen> {
     final items = [
       MenuItems(
         label: "Conta",
-        onClick: () => context.push("/settings/profile"),
+        onClick: () => context.push(SettingsProfileScreen.getPath()),
         icon: Icons.person,
       ),
       MenuItems(

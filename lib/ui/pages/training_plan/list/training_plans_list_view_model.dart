@@ -5,11 +5,9 @@ import 'package:gymtrack/domain/models/training_plan.dart';
 
 class TrainingPlansListViewModel extends ChangeNotifier {
   final TrainingPlanRepository _trainingPlanRepository;
-  final String userId;
 
   TrainingPlansListViewModel(
-      {required TrainingPlanRepository trainingPlanRepository,
-      required this.userId})
+      {required TrainingPlanRepository trainingPlanRepository})
       : _trainingPlanRepository = trainingPlanRepository {
     load = Command.createAsyncNoParam(
       _load,

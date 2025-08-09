@@ -5,10 +5,8 @@ import 'package:gymtrack/ui/pages/training_plan/more_info/training_plan_more_inf
 
 class TrainingPlanCard extends StatelessWidget {
   final TrainingPlan trainingPlan;
-  final String userId;
 
-  const TrainingPlanCard(
-      {super.key, required this.trainingPlan, required this.userId});
+  const TrainingPlanCard({super.key, required this.trainingPlan});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +15,6 @@ class TrainingPlanCard extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.deferToChild,
       onTap: () => context.push(TrainingPlanMoreInfoScreen.getPath({
-        'userId': userId,
         'trainingPlanId': trainingPlan.id,
       })),
       child: Container(

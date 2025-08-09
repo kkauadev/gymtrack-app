@@ -9,8 +9,7 @@ import 'package:gymtrack/ui/pages/training_plan/more_info/training_plan_more_inf
 import 'package:gymtrack/ui/pages/training_plan/my_subscriptions_screen.dart';
 
 class TrainingPlanMoreInfoScreen extends StatefulWidget {
-  static const _pathTemplate =
-      '/training-plan/:userId/more_info/:trainingPlanId';
+  static const _pathTemplate = '/training-plan/more_info/:trainingPlanId';
 
   static String name = '/more_info/:trainingPlanId';
 
@@ -37,14 +36,20 @@ class TrainingPlanMoreInfoScreenState
 
       if (context.mounted) {
         await context.push(
-          MySubscriptionsScreen.getPath({"userId": widget.viewModel.userId}),
+          MySubscriptionsScreen.getPath(),
         );
       }
+    }
+
+    Future onTapSendToInProgress() async {
+      await widget.viewModel.sendPlanSubscriptionToInProgress
+          .executeWithFuture();
     }
 
     final textStyle = Theme.of(context).textTheme.displayLarge;
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: () => context.pop()),
         actions: [
           PopupMenuButton(
             icon: Icon(Icons.more_vert_outlined),
@@ -53,14 +58,11 @@ class TrainingPlanMoreInfoScreenState
                 EdgeInsetsGeometry.symmetric(vertical: 8, horizontal: 8),
             itemBuilder: (context) {
               return [
-                PopupMenuItem<String>(
+                PopupMenuItem(
                   value: "asdadas",
-                  child: Text(
-                    "Editar",
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: Text("Editar", style: TextStyle(fontSize: 18)),
                 ),
-                PopupMenuItem<String>(
+                PopupMenuItem(
                   value: "asdadas",
                   child: Text(
                     "Desistir",
@@ -92,15 +94,15 @@ class TrainingPlanMoreInfoScreenState
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         RichText(
-                            text: TextSpan(
-                                text: "Visibilidade: ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                children: [
+                          text: TextSpan(
+                            text: "Visibilidade: ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                            children: [
                               TextSpan(
                                 text: data.visibility.friendlyName,
                                 style: Theme.of(context)
@@ -108,17 +110,19 @@ class TrainingPlanMoreInfoScreenState
                                     .bodyLarge
                                     ?.copyWith(color: Colors.black),
                               )
-                            ])),
+                            ],
+                          ),
+                        ),
                         RichText(
-                            text: TextSpan(
-                                text: "Foco: ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                children: [
+                          text: TextSpan(
+                            text: "Foco: ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                            children: [
                               TextSpan(
                                 text: data.type.friendlyName,
                                 style: Theme.of(context)
@@ -126,7 +130,9 @@ class TrainingPlanMoreInfoScreenState
                                     .bodyLarge
                                     ?.copyWith(color: Colors.black),
                               )
-                            ])),
+                            ],
+                          ),
+                        ),
                         RichText(
                           text: TextSpan(
                             text: "Nivel: ",
@@ -163,18 +169,6 @@ class TrainingPlanMoreInfoScreenState
                                 top: 8,
                                 bottom: 8,
                               ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.25),
-                                    blurRadius: 2,
-                                    spreadRadius: 0,
-                                    offset: Offset(0, 0),
-                                  ),
-                                ],
-                              ),
                               child: Column(
                                 children: [
                                   DayCard(day: data.days[i]),
@@ -189,6 +183,18 @@ class TrainingPlanMoreInfoScreenState
                               ),
                             ),
                           ),
+                        ),
+                        CommandBuilder(
+                          command:
+                              widget.viewModel.existsPlanSubscriptionInProgress,
+                          onData: (context, data, param) {
+                            if (!data) return SizedBox();
+
+                            return Button(
+                              label: "Iniciar",
+                              onPressed: onTapSendToInProgress,
+                            );
+                          },
                         ),
                         CommandBuilder(
                           command: widget.viewModel.existsPlanSubscription,

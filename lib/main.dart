@@ -11,7 +11,6 @@ void main() {
   runApp(
     MultiProvider(
       providers: providersRemote,
-      //ChangeNotifierProvider(create: (_) => SomeProvider()),
       child: MaterialApp.router(
         locale: const Locale('pt', 'BR'),
         supportedLocales: const [
